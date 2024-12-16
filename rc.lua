@@ -1,3 +1,8 @@
+-- See original rc.lua:
+-- https://awesomewm.org/doc/api/sample%20files/rc.lua.html
+-- or in:
+-- /etc/xdg/awesome/rc.lua
+
 -- {{{ Required libraries
 
 -- If LuaRocks is installed, make sure that packages installed through it are
