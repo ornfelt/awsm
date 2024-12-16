@@ -1,10 +1,3 @@
---[[
-
-     Awesome WM configuration template
-     github.com/lcpz
-
---]]
-
 -- {{{ Required libraries
 
 -- If LuaRocks is installed, make sure that packages installed through it are
@@ -68,7 +61,8 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "urxvtd", "unclutter -root" }) -- comma-separated entries
+--run_once({ "urxvtd", "unclutter -root" }) -- comma-separated entries
+run_once({ "picom", "--animations" })
 
 -- This function implements the XDG autostart specification
 --[[
@@ -283,7 +277,7 @@ globalkeys = mytable.join(
     awful.key({ modkey, ctrlkey }, "Return", function () awful.spawn.with_shell( "~/.local/bin/my_scripts/term_wd.sh " .. secterminal ) end,
               {description = "Launch terminal", group = "awesome"}),
 
-    awful.key({ modkey, "Shift" }, "r", awesome.restart,
+    awful.key({ modkey, ctrlkey }, "r", awesome.restart,
               {description = "Reload awesome", group = "awesome"}),
 
     awful.key({ modkey, "Shift" }, "q",   awesome.quit,
@@ -545,10 +539,16 @@ globalkeys = mytable.join(
     awful.key({ modkey }, "y", function () awful.tag.incmwfact(-0.05) end,
         {description = "decrease master width factor", group = "layout"}),
 
+    awful.key({ modkey, "Shift" }, "a", function() awful.spawn("picom-trans -c -5") end,
+        {description = "decrease transparency", group = "custom"}),
+
+    awful.key({ modkey, "Control" }, "a", function() awful.spawn("picom-trans -c +5") end,
+        {description = "increase transparency", group = "custom"}),
+
     -- Dynamic tagging
     -- awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag() end,
     --     {description = "add new tag", group = "tag"}),
-    -- awful.key({ modkey, ctrlkey }, "r", function () lain.util.rename_tag() end,
+    -- awful.key({ modkey, "Shift" }, "r", function () lain.util.rename_tag() end,
     --     {description = "rename tag", group = "tag"}),
     -- awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end,
     --     {description = "move tag to the left", group = "tag"}),
@@ -654,8 +654,21 @@ clientkeys = mytable.join(
     awful.key({ modkey }, "q", function (c) c:kill() end,
       {description = "close", group = "hotkeys"}),
 
-    awful.key({ modkey,         }, "space", awful.client.floating.toggle,
-      {description = "toggle floating", group = "client"}),
+    --awful.key({ modkey,         }, "space", awful.client.floating.toggle,
+    --  {description = "toggle floating", group = "client"}),
+
+    awful.key(
+      { modkey }, "space",
+      function(c)
+        awful.client.floating.toggle(c)
+
+        -- If the client is now floating, center it
+        if c.floating then
+          awful.placement.centered(c, {honor_workarea = true})
+        end
+      end,
+      {description = "toggle floating and center", group = "client"}
+    ),
 
     -- awful.key({ modkey, ctrlkey }, "Return", function (c) c:swap(awful.client.getmaster()) end,
     --   {description = "move to master", group = "client"}),
@@ -722,17 +735,29 @@ for i = 1, 9 do
                   end,
                   {description = "view tag #"..i, group = "tag"}),
         -- Toggle tag display.
-        awful.key({ modkey, "Control" }, "#" .. i + 9,
-                  function ()
-                      local screen = awful.screen.focused()
-                      local tag = screen.tags[i]
-                      if tag then
-                         awful.tag.viewtoggle(tag)
-                      end
-                  end,
-                  {description = "toggle tag #" .. i, group = "tag"}),
-        -- Move client to tag.
+        --awful.key({ modkey, "Control" }, "#" .. i + 9,
+        --          function ()
+        --              local screen = awful.screen.focused()
+        --              local tag = screen.tags[i]
+        --              if tag then
+        --                 awful.tag.viewtoggle(tag)
+        --              end
+        --          end,
+        --          {description = "toggle tag #" .. i, group = "tag"}),
+        -- Move client to tag and view it.
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
+                  function ()
+                      if client.focus then
+                          local tag = client.focus.screen.tags[i]
+                          if tag then
+                              client.focus:move_to_tag(tag)
+                              toggle_tag(tag)
+                          end
+                     end
+                  end,
+                  {description = "move focused client to tag #"..i, group = "tag"}),
+        -- Move client to tag.
+        awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
                       if client.focus then
                           local tag = client.focus.screen.tags[i]
@@ -784,6 +809,7 @@ awful.rules.rules = {
         properties = {
             --maximized = false, -- Ensure Firefox is not always maximized
             floating = false,  -- Ensure it respects tiled layouts
+            tag = "2",
         },
     },
     {
@@ -810,35 +836,36 @@ awful.rules.rules = {
     },
 
     -- Floating clients.
-    { rule_any = {
-        instance = {
-          "DTA",  -- Firefox addon DownThemAll.
-          "copyq",  -- Includes session name in class.
-          "pinentry",
-        },
-        class = {
-          "Arandr",
-          "Blueman-manager",
-          "Gpick",
-          "Kruler",
-          "MessageWin",  -- kalarm.
-          "Sxiv",
-          "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-          "Wpa_gui",
-          "veromix",
-          "xtightvncviewer"},
-
-        -- Note that the name property shown in xprop might be set slightly after creation of the client
-        -- and the name shown there might not match defined rules here.
-        name = {
-          "Event Tester",  -- xev.
-        },
-        role = {
-          "AlarmWindow",  -- Thunderbird's calendar.
-          "ConfigManager",  -- Thunderbird's about:config.
-          "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
-        }
-      }, properties = { floating = true }},
+  --{
+  --  rule_any = {
+  --    instance = {
+  --      "DTA", -- Firefox addon DownThemAll.
+  --      "copyq", -- Includes session name in class.
+  --      "pinentry",
+  --    },
+  --    class = {
+  --      "Arandr",
+  --      "Blueman-manager",
+  --      "Gpick",
+  --      "Kruler",
+  --      "MessageWin", -- kalarm.
+  --      "Sxiv",
+  --      "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+  --      "Wpa_gui",
+  --      "veromix",
+  --      "xtightvncviewer"},
+  --
+  --    -- Note that the name property shown in xprop might be set slightly after creation of the client
+  --    -- and the name shown there might not match defined rules here.
+  --    name = {
+  --      "Event Tester",  -- xev.
+  --    },
+  --    role = {
+  --      "AlarmWindow",  -- Thunderbird's calendar.
+  --      "ConfigManager",  -- Thunderbird's about:config.
+  --      "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
+  --    }
+  --  }, properties = { floating = true }},
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
@@ -916,9 +943,9 @@ client.connect_signal("request::titlebars", function(c)
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = vi_focus})
-end)
+--client.connect_signal("mouse::enter", function(c)
+--    c:emit_signal("request::activate", "mouse_enter", {raise = vi_focus})
+--end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
@@ -965,3 +992,48 @@ for s in screen do
         end
     end)
 end
+
+-- Multiple monitor taglist setup
+-- See: {code_root_dir}/Code2/Lua/my_lua/testing/awsm_tag_testing.lua
+local binary_mask = 341
+
+local function setup_tags_for_monitors()
+    local num_screens = screen.count()
+
+    for s in screen do
+        s.tags = {}
+
+        if num_screens == 2 then
+            for i = 1, 9 do
+                if s.index == 1 and (binary_mask & (1 << (i - 1))) ~= 0 then
+                  awful.tag.add("Tag " .. i, { screen = s, layout = awful.layout.suit.spiral })
+                elseif s.index == 2 and (binary_mask & (1 << (i - 1))) == 0 then
+                  awful.tag.add("Tag " .. i, { screen = s, layout = awful.layout.suit.spiral })
+                end
+            end
+        else
+            -- Cyclical tag distribution for 3 or more monitors
+            for i = 1, 9 do
+                -- Assign tag `i` to the monitor `((i - 1) % num_screens) + 1`
+                local target_screen = ((i - 1) % num_screens) + 1
+                if s.index == target_screen then
+                    awful.tag.add("Tag " .. i, {
+                        screen = s,
+                        layout = awful.layout.suit.spiral,
+                    })
+                end
+            end
+        end
+    end
+end
+
+screen.connect_signal("added", function()
+    setup_tags_for_monitors()
+end)
+
+screen.connect_signal("removed", function()
+    setup_tags_for_monitors()
+end)
+
+setup_tags_for_monitors()
+
