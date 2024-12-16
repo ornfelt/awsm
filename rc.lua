@@ -1011,9 +1011,9 @@ local function setup_tags_for_monitors()
         if num_screens == 2 then
             for i = 1, 9 do
                 if s.index == 1 and (binary_mask & (1 << (i - 1))) ~= 0 then
-                  awful.tag.add("Tag " .. i, { screen = s, layout = awful.layout.suit.spiral })
+                  awful.tag.add(i, { screen = s, layout = awful.layout.suit.spiral })
                 elseif s.index == 2 and (binary_mask & (1 << (i - 1))) == 0 then
-                  awful.tag.add("Tag " .. i, { screen = s, layout = awful.layout.suit.spiral })
+                  awful.tag.add(i, { screen = s, layout = awful.layout.suit.spiral })
                 end
             end
         else
@@ -1022,7 +1022,7 @@ local function setup_tags_for_monitors()
                 -- Assign tag `i` to the monitor `((i - 1) % num_screens) + 1`
                 local target_screen = ((i - 1) % num_screens) + 1
                 if s.index == target_screen then
-                    awful.tag.add("Tag " .. i, {
+                    awful.tag.add(i, {
                         screen = s,
                         layout = awful.layout.suit.spiral,
                     })
