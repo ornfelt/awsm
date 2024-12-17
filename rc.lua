@@ -723,6 +723,8 @@ local function toggle_tag(tag)
     end
 end
 
+local binary_mask = 341
+
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
@@ -731,14 +733,31 @@ for i = 1, 9 do
         -- View tag only.
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
+                      local num_screens = screen:count()
+                      if num_screens == 2 then
+                          -- Determine the screen and tag based on binary mask and tag index
+                          for s in awful.screen do
+                              if s.index == 1 and (binary_mask & (1 << (i - 1))) ~= 0 then
+                                  awful.screen.focus(s.index)
+                                  local tag = s.tags[i]
+                                  toggle_tag(tag)
+                              elseif s.index == 2 and (binary_mask & (1 << (i - 1))) == 0 then
+                                  awful.screen.focus(s.index)
+                                  local tag = s.tags[i]
+                                  toggle_tag(tag)
+                              end
+                          end
+                      else
                         local screen = awful.screen.focused()
                         local tag = screen.tags[i]
                         if tag then
                            --tag:view_only()
                            toggle_tag(tag)
                         end
+                      end
                   end,
-                  {description = "view tag #"..i, group = "tag"}),
+                  {description = "view tag #"..i.." on appropriate monitor", group = "tag"}),
+
         -- Toggle tag display.
         --awful.key({ modkey, "Control" }, "#" .. i + 9,
         --          function ()
@@ -1000,7 +1019,6 @@ end
 
 -- Multiple monitor taglist setup
 -- See: {code_root_dir}/Code2/Lua/my_lua/testing/awsm_tag_testing.lua
-local binary_mask = 341
 
 local function setup_tags_for_monitors()
     local num_screens = screen.count()
@@ -1032,8 +1050,63 @@ local function setup_tags_for_monitors()
     end
 end
 
+local function move_clients_cyclically()
+    local screens = screen:count()
+    if screens < 3 then return end
+
+    -- Move clients cyclically across all monitors based on tag index
+    for _, c in ipairs(client.get()) do
+        local tags = c:tags()
+        for _, tag in ipairs(tags) do
+            local tag_index = tonumber(tag.name)
+            if tag_index then
+                local target_screen_index = ((tag_index - 1) % screens) + 1
+                local target_screen = screen[target_screen_index]
+
+                if target_screen and c.screen ~= target_screen then
+                    c:move_to_screen(target_screen)
+                end
+
+                --tag:view_only()
+                break
+            end
+        end
+    end
+end
+
+local EVEN_TAG_MASK = 170
+
+local function move_even_tag_clients()
+    local screens = screen:count()
+    if screens ~= 2 then return end
+
+    local primary_screen = screen[1]
+    local secondary_screen = screen[2]
+
+    for _, c in ipairs(client.get()) do
+        local tags = c:tags()
+        for _, tag in ipairs(tags) do
+            local tag_index = tonumber(tag.name)
+            if tag_index and (EVEN_TAG_MASK & (1 << (tag_index - 1))) ~= 0 then
+                c:move_to_screen(secondary_screen)
+                --tag:view_only()
+                break
+            end
+        end
+    end
+end
+
+--awful.screen.connect_for_each_screen(function(s)
+--    if screen:count() == 2 then
+--        move_even_tag_clients()
+--    end
+--end)
+
 screen.connect_signal("added", function()
     setup_tags_for_monitors()
+    -- One monitor case is handled automatically?
+    move_even_tag_clients()
+    move_clients_cyclically()
 end)
 
 screen.connect_signal("removed", function()
