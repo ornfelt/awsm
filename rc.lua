@@ -283,11 +283,11 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 
 -- {{{ Mouse bindings
 
-root.buttons(mytable.join(
-    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
-))
+--root.buttons(mytable.join(
+--    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
+--    awful.button({ }, 4, awful.tag.viewnext),
+--    awful.button({ }, 5, awful.tag.viewprev)
+--))
 
 -- }}}
 
@@ -812,11 +812,7 @@ local function switch_to_tag(tag_index)
   end
 end
 
--- Split these into tag and move?
-local function switch_to_tag_with_options(tag_index, options)
-  options = options or {}
-  local move_client = options.move_client or false
-  local view_tag = options.view_tag or false
+local function switch_to_tag_move(tag_index)
   local num_screens = screen:count()
 
   if num_screens == 2 then
@@ -828,50 +824,36 @@ local function switch_to_tag_with_options(tag_index, options)
 
     if current_screen == primary_screen and not client_is_odd then
       -- Currently on primary screen, but tag is even -> Switch to secondary screen
-      if view_tag then
-        awful.screen.focus(secondary_screen)
-      end
-      if move_client and client.focus then
-        focused_client:move_to_screen(secondary_screen)
-        local target_tag = secondary_screen.tags[tag_index]
-        if target_tag then
-          focused_client:move_to_tag(target_tag)
-        end
-      end
-      if view_tag then
-        local target_tag = secondary_screen.tags[tag_index]
-        target_tag:view_only()
-        client.focus = focused_client
-        focused_client:raise()
-      end
-    elseif current_screen == secondary_screen and client_is_odd then
-      -- Currently on secondary screen, but tag is odd -> Switch to primary screen
-      if view_tag then
-        awful.screen.focus(primary_screen)
-      end
-      if move_client and client.focus then
-        focused_client:move_to_screen(primary_screen)
-        local target_tag = primary_screen.tags[tag_index]
-        if target_tag then
-          focused_client:move_to_tag(target_tag)
-        end
-      end
-      if view_tag then
-        local target_tag = primary_screen.tags[tag_index]
-        target_tag:view_only()
-        client.focus = focused_client
-        focused_client:raise()
-      end
-    else
-      -- Stay on the current screen and move to the tag
-      local target_tag = current_screen.tags[tag_index]
-      if move_client and client.focus then
+      awful.screen.focus(secondary_screen)
+      focused_client:move_to_screen(secondary_screen)
+      local target_tag = secondary_screen.tags[tag_index]
+      if target_tag then
         focused_client:move_to_tag(target_tag)
       end
-      if view_tag and target_tag then
-        target_tag:view_only()
+      local target_tag = secondary_screen.tags[tag_index]
+      target_tag:view_only()
+      client.focus = focused_client
+      focused_client:raise()
+
+    elseif current_screen == secondary_screen and client_is_odd then
+      -- Currently on secondary screen, but tag is odd -> Switch to primary screen
+      awful.screen.focus(primary_screen)
+      focused_client:move_to_screen(primary_screen)
+      local target_tag = primary_screen.tags[tag_index]
+      if target_tag then
+        focused_client:move_to_tag(target_tag)
       end
+      local target_tag = primary_screen.tags[tag_index]
+      target_tag:view_only()
+      client.focus = focused_client
+      focused_client:raise()
+
+    else
+      local target_tag = current_screen.tags[tag_index]
+      focused_client:move_to_tag(target_tag)
+      target_tag:view_only()
     end
+
   elseif num_screens > 2 then
     -- Determine target screen cyclically
     local target_screen_index = ((tag_index - 1) % num_screens) + 1
@@ -879,24 +861,69 @@ local function switch_to_tag_with_options(tag_index, options)
 
     awful.screen.focus(target_screen)
     local tag = target_screen.tags[((tag_index - 1) % #target_screen.tags) + 1]
-    if move_client then
-      if client.focus.screen ~= target_screen then
-        client.focus:move_to_screen(target_screen)
-      end
-      client.focus:move_to_tag(tag)
+    if client.focus.screen ~= target_screen then
+      client.focus:move_to_screen(target_screen)
     end
-    if view_tag then
-      tag:view_only()
-    end
+    client.focus:move_to_tag(tag)
+    tag:view_only()
+
   else
     local current_screen = awful.screen.focused()
     local tag = current_screen.tags[tag_index]
-    if move_client then
-      client.focus:move_to_tag(tag)
+    client.focus:move_to_tag(tag)
+    toggle_tag(tag)
+  end
+end
+
+local function switch_to_tag_stay(tag_index)
+  local num_screens = screen:count()
+
+  if num_screens == 2 then
+    local primary_screen = screen[1]
+    local secondary_screen = screen[2]
+    local current_screen = awful.screen.focused()
+    local current_tag = awful.screen.focused().selected_tag
+    local client_is_odd = is_odd_with_mask(tag_index)
+    local focused_client = client.focus
+
+    if not focused_client then return end
+
+    if current_screen == primary_screen and not client_is_odd then
+      -- Currently on primary screen, but tag is even -> Switch to secondary screen
+      local target_tag = secondary_screen.tags[tag_index]
+      focused_client:move_to_tag(target_tag)
+      focused_client:move_to_screen(secondary_screen)
+      awful.screen.focus(primary_screen)
+      current_tag:view_only()
+
+    elseif current_screen == secondary_screen and client_is_odd then
+      -- Currently on secondary screen, but tag is odd -> Switch to primary screen
+      local target_tag = primary_screen.tags[tag_index]
+      focused_client:move_to_tag(target_tag)
+      focused_client:move_to_screen(primary_screen)
+      awful.screen.focus(secondary_screen)
+      current_tag:view_only()
+
+    else
+      local target_tag = current_screen.tags[tag_index]
+      focused_client:move_to_tag(target_tag)
     end
-    if view_tag then
-      toggle_tag(tag)
+
+  elseif num_screens > 2 then
+    -- Determine target screen cyclically
+    local target_screen_index = ((tag_index - 1) % num_screens) + 1
+    local target_screen = screen[target_screen_index]
+
+    local tag = target_screen.tags[((tag_index - 1) % #target_screen.tags) + 1]
+    if client.focus.screen ~= target_screen then
+      client.focus:move_to_screen(target_screen)
     end
+    client.focus:move_to_tag(tag)
+
+  else
+    local current_screen = awful.screen.focused()
+    local tag = current_screen.tags[tag_index]
+    client.focus:move_to_tag(tag)
   end
 end
 
@@ -920,7 +947,7 @@ for i = 1, 9 do
         --    toggle_tag(tag)
         --  end
         --end
-        switch_to_tag_with_options(i, { view_tag = true, move_client = true })
+        switch_to_tag_move(i)
       end,
       {description = "move focused client to tag #"..i, group = "tag"}),
     -- Move client to tag.
@@ -932,7 +959,7 @@ for i = 1, 9 do
         --    client.focus:move_to_tag(tag)
         --  end
         --end
-        switch_to_tag_with_options(i, { view_tag = false, move_client = true })
+        switch_to_tag_stay(i)
       end,
       {description = "move focused client to tag #"..i, group = "tag"}),
     -- Toggle tag on focused client.
@@ -1186,7 +1213,6 @@ local function move_clients_cyclically()
         if target_screen and c.screen ~= target_screen then
           c:move_to_screen(target_screen)
         end
-        --tag:view_only()
         break
       end
     end
