@@ -280,6 +280,8 @@ end)
 -- Create a wibox for each screen and add it
 awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) end)
 
+check_toggle_widget_visibility()
+
 -- }}}
 
 -- {{{ Mouse bindings
