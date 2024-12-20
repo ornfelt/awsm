@@ -11452,7 +11452,7 @@ index cc12cfd..0000000
 -    layout = wibox.layout.align.vertical
 -}
 diff --git a/rc.lua b/rc.lua
-index 899a8b7..460d304 100644
+index 899a8b7..7846928 100644
 --- a/rc.lua
 +++ b/rc.lua
 @@ -1,107 +1,134 @@
@@ -11816,7 +11816,7 @@ index 899a8b7..460d304 100644
  
  -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
  screen.connect_signal("property::geometry", function(s)
-@@ -212,16 +244,56 @@ screen.connect_signal("property::geometry", function(s)
+@@ -212,16 +244,58 @@ screen.connect_signal("property::geometry", function(s)
      end
  end)
  
@@ -11861,11 +11861,13 @@ index 899a8b7..460d304 100644
 -    awful.button({ }, 4, awful.tag.viewnext),
 -    awful.button({ }, 5, awful.tag.viewprev)
 -))
-+-- }}}
++check_toggle_widget_visibility()
 +
-+-- {{{ Mouse bindings
++-- }}}
  
 -globalkeys = my_table.join(
++-- {{{ Mouse bindings
++
 +--root.buttons(mytable.join(
 +--    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
 +--    awful.button({ }, 4, awful.tag.viewnext),
@@ -11879,7 +11881,7 @@ index 899a8b7..460d304 100644
      -- {{{ Personal keybindings
  
      -- Awesome keybindings
-@@ -232,7 +304,7 @@ globalkeys = my_table.join(
+@@ -232,7 +306,7 @@ globalkeys = my_table.join(
      awful.key({ modkey, ctrlkey }, "Return", function () awful.spawn.with_shell( "~/.local/bin/my_scripts/term_wd.sh " .. secterminal ) end,
                {description = "Launch terminal", group = "awesome"}),
  
@@ -11888,7 +11890,7 @@ index 899a8b7..460d304 100644
                {description = "Reload awesome", group = "awesome"}),
  
      awful.key({ modkey, "Shift" }, "q",   awesome.quit,
-@@ -255,6 +327,9 @@ globalkeys = my_table.join(
+@@ -255,6 +329,9 @@ globalkeys = my_table.join(
          end,
          {description = "Show/hide wibox (bar)", group = "awesome"}),
  
@@ -11898,7 +11900,7 @@ index 899a8b7..460d304 100644
      -- Run launcher
      awful.key({ modkey },            "a",     function ()
      awful.util.spawn("/home/jonas/.local/bin/my_scripts/tmux_attach.sh "..terminal)  end,
-@@ -434,18 +509,18 @@ globalkeys = my_table.join(
+@@ -434,18 +511,18 @@ globalkeys = my_table.join(
          {description = "Focus previous by index", group = "client"}),
  
      -- By direction client focus
@@ -11929,7 +11931,7 @@ index 899a8b7..460d304 100644
  
          -- By direction client focus with arrows
      awful.key({ ctrlkey, modkey }, "Down", function() awful.client.focus.global_bydirection("down")
-@@ -491,10 +566,16 @@ globalkeys = my_table.join(
+@@ -491,10 +568,16 @@ globalkeys = my_table.join(
      awful.key({ modkey }, "y", function () awful.tag.incmwfact(-0.05) end,
          {description = "decrease master width factor", group = "layout"}),
  
@@ -11947,7 +11949,7 @@ index 899a8b7..460d304 100644
      --     {description = "rename tag", group = "tag"}),
      -- awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end,
      --     {description = "move tag to the left", group = "tag"}),
-@@ -587,7 +668,7 @@ globalkeys = my_table.join(
+@@ -587,7 +670,7 @@ globalkeys = my_table.join(
      --]]
  )
  
@@ -11956,7 +11958,7 @@ index 899a8b7..460d304 100644
      -- awful.key({ altkey, "Shift" }, "m",      lain.util.magnify_client,
      --           {description = "magnify client", group = "client"}),
      awful.key({ modkey,           }, "f",
-@@ -600,8 +681,21 @@ clientkeys = my_table.join(
+@@ -600,8 +683,21 @@ clientkeys = my_table.join(
      awful.key({ modkey }, "q", function (c) c:kill() end,
        {description = "close", group = "hotkeys"}),
  
@@ -11980,7 +11982,7 @@ index 899a8b7..460d304 100644
  
      -- awful.key({ modkey, ctrlkey }, "Return", function (c) c:swap(awful.client.getmaster()) end,
      --   {description = "move to master", group = "client"}),
-@@ -618,7 +712,7 @@ clientkeys = my_table.join(
+@@ -618,7 +714,7 @@ clientkeys = my_table.join(
          function ()
              local c = client.focus
              if c then c:move_to_screen(c.screen.index-1) end
@@ -11989,7 +11991,7 @@ index 899a8b7..460d304 100644
  
      -- awful.key({ modkey,         }, "n",
      --     function (c)
-@@ -628,92 +722,262 @@ clientkeys = my_table.join(
+@@ -628,92 +724,262 @@ clientkeys = my_table.join(
      --     end ,
      -- {description = "minimize", group = "client"}),
  
@@ -12333,7 +12335,7 @@ index 899a8b7..460d304 100644
      awful.button({ }, 1, function (c)
          c:emit_signal("request::activate", "mouse_click", {raise = true})
      end),
-@@ -730,12 +994,33 @@ clientbuttons = gears.table.join(
+@@ -730,12 +996,33 @@ clientbuttons = gears.table.join(
  -- Set keys
  root.keys(globalkeys)
  
@@ -12367,7 +12369,7 @@ index 899a8b7..460d304 100644
                       focus = awful.client.focus.filter,
                       raise = true,
                       keys = clientkeys,
-@@ -746,92 +1031,51 @@ awful.rules.rules = {
+@@ -746,92 +1033,51 @@ awful.rules.rules = {
       }
      },
  
@@ -12502,7 +12504,7 @@ index 899a8b7..460d304 100644
  
  -- Signal function to execute when a new client appears.
  client.connect_signal("manage", function (c)
-@@ -839,8 +1083,8 @@ client.connect_signal("manage", function (c)
+@@ -839,8 +1085,8 @@ client.connect_signal("manage", function (c)
      -- i.e. put it at the end of others instead of setting it master.
      -- if not awesome.startup then awful.client.setslave(c) end
  
@@ -12513,7 +12515,7 @@ index 899a8b7..460d304 100644
        and not c.size_hints.program_position then
          -- Prevent clients from being unreachable after screen count changes.
          awful.placement.no_offscreen(c)
-@@ -857,7 +1101,7 @@ client.connect_signal("request::titlebars", function(c)
+@@ -857,7 +1103,7 @@ client.connect_signal("request::titlebars", function(c)
  
      -- Default
      -- buttons for the titlebar
@@ -12522,7 +12524,7 @@ index 899a8b7..460d304 100644
          awful.button({ }, 1, function()
              c:emit_signal("request::activate", "titlebar", {raise = true})
              awful.mouse.client.move(c)
-@@ -868,7 +1112,7 @@ client.connect_signal("request::titlebars", function(c)
+@@ -868,7 +1114,7 @@ client.connect_signal("request::titlebars", function(c)
          end)
      )
  
@@ -12531,7 +12533,7 @@ index 899a8b7..460d304 100644
          { -- Left
              awful.titlebar.widget.iconwidget(c),
              buttons = buttons,
-@@ -894,72 +1138,159 @@ client.connect_signal("request::titlebars", function(c)
+@@ -894,72 +1140,159 @@ client.connect_signal("request::titlebars", function(c)
      }
  end)
  
@@ -15558,7 +15560,7 @@ Binary files a/themes/multicolor/icons/stop.png and /dev/null differ
 diff --git a/themes/multicolor/theme.lua b/themes/multicolor/theme.lua
 old mode 100755
 new mode 100644
-index 98793b2..890614a
+index 98793b2..54a17e1
 --- a/themes/multicolor/theme.lua
 +++ b/themes/multicolor/theme.lua
 @@ -9,32 +9,34 @@ local gears = require("gears")
@@ -15891,7 +15893,7 @@ index 98793b2..890614a
  local mailicon = wibox.widget.imagebox()
  theme.mail = lain.widget.imap({
      timeout  = 180,
-@@ -180,126 +326,223 @@ theme.mail = lain.widget.imap({
+@@ -180,126 +326,295 @@ theme.mail = lain.widget.imap({
  --]]
  
  -- CPU
@@ -16158,7 +16160,65 @@ index 98793b2..890614a
 +    s.mytxtlayoutbox:set_text(txt_l)
 +end
 +
-+function toggle_widget_visibility()
++
++local my_config_path = os.getenv("HOME") .. "/.config/my_config.txt"
++
++local function read_config()
++  local file = io.open(my_config_path, "r")
++  if not file then
++    return nil -- Return nil if the file doesn't exist
++  end
++
++  local config = {}
++  for line in io.lines(my_config_path) do
++    local key, value = line:match("^%s*(%S+)%s*:%s*(%S+)%s*$")
++    if key and value then
++      config[key] = value:lower() -- Store values in lowercase for case-insensitive comparison
++    end
++  end
++  return config
++end
++
++local function write_config(key, value)
++  local lines = {}
++  local key_found = false
++
++  -- Read existing lines if file exists
++  local file = io.open(my_config_path, "r")
++  if file then
++    for line in file:lines() do
++      local existing_key = line:match("^%s*(%S+)%s*:")
++      if existing_key == key then
++        table.insert(lines, key .. ": " .. tostring(value))
++        key_found = true
++      else
++        table.insert(lines, line)
++      end
++    end
++    file:close()
++  end
++
++  -- If key is not found, append it
++  if not key_found then
++    table.insert(lines, key .. ": " .. tostring(value))
++  end
++
++  -- Write to file (create if not exists)
++  file = io.open(my_config_path, "w")
++  if not file then
++    error("Unable to open or create file: " .. my_config_path)
++  end
++
++  for _, line in ipairs(lines) do
++    file:write(line .. "\n")
++  end
++  file:close()
++end
++
++-- Modified toggle_widget_visibility function
++function toggle_widget_visibility(update_config)
++  update_config = update_config == nil or update_config -- Default to true if not specified
++
 +  local widgets_to_toggle = {
 +    netdownicon,
 +    netdowninfo,
@@ -16173,6 +16233,20 @@ index 98793b2..890614a
 +  for _, widget in ipairs(widgets_to_toggle) do
 +    widget.visible = not widget.visible
 +  end
++
++  if update_config then
++    local my_config = read_config()
++    local current_state = (my_config and my_config["awsm_bar_toggled"] == "true") or false
++    write_config("awsm_bar_toggled", tostring(not current_state))
++  end
++end
++
++function check_toggle_widget_visibility()
++  local my_config = read_config()
++
++  if my_config and my_config["awsm_bar_toggled"] == "true" then
++    toggle_widget_visibility(false) -- Do not update the file at startup
++  end
 +end
 +
  function theme.at_screen_connect(s)
@@ -16183,7 +16257,7 @@ index 98793b2..890614a
  
      -- If wallpaper is a function, call it with the screen
      local wallpaper = theme.wallpaper
-@@ -314,93 +557,148 @@ function theme.at_screen_connect(s)
+@@ -314,93 +629,148 @@ function theme.at_screen_connect(s)
      -- Create a promptbox for each screen
      s.mypromptbox = awful.widget.prompt()
      -- Create an imagebox widget which will contains an icon indicating which layout we're using.
