@@ -362,7 +362,7 @@ globalkeys = mytable.join(
               {description = "code launcher", group = "launcher"}),
 
     awful.key({ modkey },            "r",     function ()
-    awful.util.spawn("dmenu_run -fn 'Linux Libertine Mono'")    end,
+    awful.util.spawn("dmenu_run -i -l 20")    end,
               {description = "run dmenu", group = "launcher"}),
 
     awful.key({ modkey },            "w",     function ()
