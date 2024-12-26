@@ -110,7 +110,8 @@ theme.titlebar_maximized_button_focus_active    = theme.confdir .. "/icons/title
 -- Random wallpaper
 local function get_random_wallpaper(directory, extension)
     local wallpapers = {}
-    local command = "find " .. directory .. " -type f -name '*." .. extension .. "'"
+    --local command = "find " .. directory .. " -type f -name '*." .. extension .. "'"
+    local command = "find " .. directory .. " -type f \\( -name '*.png' -o -name '*.jpg' \\)"
     local handle = io.popen(command)
     if handle then
         for file in handle:lines() do
