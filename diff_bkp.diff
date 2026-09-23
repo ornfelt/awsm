@@ -23084,7 +23084,7 @@ Binary files a/themes/multicolor/icons/stop.png and /dev/null differ
 diff --git a/themes/multicolor/theme.lua b/themes/multicolor/theme.lua
 old mode 100755
 new mode 100644
-index 98793b2..e55ea7a
+index 98793b2..e68ff81
 --- a/themes/multicolor/theme.lua
 +++ b/themes/multicolor/theme.lua
 @@ -9,32 +9,34 @@ local gears = require("gears")
@@ -23899,7 +23899,7 @@ index 98793b2..e55ea7a
  
      -- If wallpaper is a function, call it with the screen
      local wallpaper = theme.wallpaper
-@@ -314,93 +745,149 @@ function theme.at_screen_connect(s)
+@@ -314,93 +745,150 @@ function theme.at_screen_connect(s)
      -- Create a promptbox for each screen
      s.mypromptbox = awful.widget.prompt()
      -- Create an imagebox widget which will contains an icon indicating which layout we're using.
@@ -23962,6 +23962,7 @@ index 98793b2..e55ea7a
 +  s.mytaglist = awful.widget.taglist {
 +    screen = s,
 +    filter = function(t) return t.selected or #t:clients() > 0 end,
++    buttons = awful.util.taglist_buttons,
 +    layout = {
 +      --spacing = 8,
 +      --spacing = 2,

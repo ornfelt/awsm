@@ -20013,10 +20013,10 @@ index 0000000..a96b9b1
 Binary files /dev/null and b/themes/multicolor/icons/titlebar/sticky_normal_inactive.png differ
 diff --git a/themes/multicolor/theme.lua b/themes/multicolor/theme.lua
 new file mode 100644
-index 0000000..e55ea7a
+index 0000000..e68ff81
 --- /dev/null
 +++ b/themes/multicolor/theme.lua
-@@ -0,0 +1,893 @@
+@@ -0,0 +1,894 @@
 +--[[
 +
 +     Multicolor Awesome WM theme 2.0
@@ -20811,6 +20811,7 @@ index 0000000..e55ea7a
 +  s.mytaglist = awful.widget.taglist {
 +    screen = s,
 +    filter = function(t) return t.selected or #t:clients() > 0 end,
++    buttons = awful.util.taglist_buttons,
 +    layout = {
 +      --spacing = 8,
 +      --spacing = 2,
