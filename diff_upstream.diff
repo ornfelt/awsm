@@ -245,6 +245,64 @@ index 9441919..0000000
 -# If you have a new feature or theme request
 -
 -Write a detailed description of the desired design, preferably with screenshots or mockups.
+diff --git a/README.rst b/README.rst
+index 952dcec..7fa6263 100644
+--- a/README.rst
++++ b/README.rst
+@@ -53,43 +53,43 @@ Gallery
+ 
+ **Multicolor**, inspired by lucamanni_
+ 
+-.. image:: screenshots/multicolor.png
++.. image:: http://dotshare.it/public/images/uploads/650.png
+ 
+ **Powerarrow**, porting of romockee_'s
+ 
+-.. image:: screenshots/powerarrow.png
++.. image:: http://dotshare.it/public/images/uploads/1453.png
+ 
+ **Powerarrow Dark**
+ 
+-.. image:: screenshots/powerarrow_dark.png
++.. image:: http://dotshare.it/public/images/uploads/649.jpg
+ 
+ **Steamburn**, porting of ok100_'s dwm
+ 
+-.. image:: screenshots/steamburn.png
++.. image:: http://dotshare.it/public/images/uploads/648.png
+ 
+ **Blackburn**
+ 
+-.. image:: screenshots/blackburn.png
++.. image:: http://dotshare.it/public/images/uploads/553.png
+ 
+ **Dremora**
+ 
+-.. image:: screenshots/dremora.png
++.. image:: http://dotshare.it/public/images/uploads/652.png
+ 
+ **Rainbow**
+ 
+-.. image:: screenshots/rainbow.png
++.. image:: http://dotshare.it/public/images/uploads/606.png
+ 
+ **Holo**, requested by amouly_
+ 
+-.. image:: screenshots/holo.png
++.. image:: http://dotshare.it/public/images/uploads/651.jpg
+ 
+ **Copland**, inspired by foozer_
+ 
+-.. image:: screenshots/copland.png
++.. image:: http://dotshare.it/public/images/uploads/655.png
+ 
+ **Vertex**, requested by swordfischer_
+ 
+-.. image:: screenshots/vertex.png
++.. image:: http://dotshare.it/public/images/uploads/1432.jpg
+ 
+ Installation
+ ============
 diff --git a/claude_usage/.editorconfig b/claude_usage/.editorconfig
 new file mode 100644
 index 0000000..33c361e
@@ -7598,7 +7656,7 @@ index 0000000..bf254ac
 Binary files /dev/null and b/freedesktop/screenshot.png differ
 diff --git a/gen_diffs.sh b/gen_diffs.sh
 new file mode 100755
-index 0000000..49a9ed8
+index 0000000..df2a06f
 --- /dev/null
 +++ b/gen_diffs.sh
 @@ -0,0 +1,50 @@
@@ -7609,7 +7667,7 @@ index 0000000..49a9ed8
 +    exit 1
 +fi
 +
-+git diff upstream/master...master > diff_upstream.diff
++git diff upstream/master...master -- . ":(exclude)*.diff" > diff_upstream.diff
 +git diff origin/bkp -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_bkp.diff
 +git diff origin/tarneaux -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_tarneaux.diff
 +
@@ -17685,6 +17743,46 @@ index 0000000..d5356d4
 +
 +--setup_tags_for_monitors()
 +
+diff --git a/screenshots/blackburn.png b/screenshots/blackburn.png
+deleted file mode 100644
+index f8a7efb..0000000
+Binary files a/screenshots/blackburn.png and /dev/null differ
+diff --git a/screenshots/copland.png b/screenshots/copland.png
+deleted file mode 100644
+index 8160fd1..0000000
+Binary files a/screenshots/copland.png and /dev/null differ
+diff --git a/screenshots/dremora.png b/screenshots/dremora.png
+deleted file mode 100644
+index 3251a36..0000000
+Binary files a/screenshots/dremora.png and /dev/null differ
+diff --git a/screenshots/holo.png b/screenshots/holo.png
+deleted file mode 100644
+index 9b12383..0000000
+Binary files a/screenshots/holo.png and /dev/null differ
+diff --git a/screenshots/multicolor.png b/screenshots/multicolor.png
+deleted file mode 100644
+index 64d53e4..0000000
+Binary files a/screenshots/multicolor.png and /dev/null differ
+diff --git a/screenshots/powerarrow.png b/screenshots/powerarrow.png
+deleted file mode 100644
+index c0f0c5d..0000000
+Binary files a/screenshots/powerarrow.png and /dev/null differ
+diff --git a/screenshots/powerarrow_dark.png b/screenshots/powerarrow_dark.png
+deleted file mode 100644
+index 7538f28..0000000
+Binary files a/screenshots/powerarrow_dark.png and /dev/null differ
+diff --git a/screenshots/rainbow.png b/screenshots/rainbow.png
+deleted file mode 100644
+index a682f27..0000000
+Binary files a/screenshots/rainbow.png and /dev/null differ
+diff --git a/screenshots/steamburn.png b/screenshots/steamburn.png
+deleted file mode 100644
+index 7511902..0000000
+Binary files a/screenshots/steamburn.png and /dev/null differ
+diff --git a/screenshots/vertex.png b/screenshots/vertex.png
+deleted file mode 100644
+index 3beac81..0000000
+Binary files a/screenshots/vertex.png and /dev/null differ
 diff --git a/themes/blackburn/icons/awesome.png b/themes/blackburn/icons/awesome.png
 deleted file mode 100755
 index 947a06d..0000000
