@@ -8220,7 +8220,7 @@ index 0000000..bf254ac
 Binary files /dev/null and b/freedesktop/screenshot.png differ
 diff --git a/gen_diffs.sh b/gen_diffs.sh
 new file mode 100755
-index 0000000..49a9ed8
+index 0000000..df2a06f
 --- /dev/null
 +++ b/gen_diffs.sh
 @@ -0,0 +1,50 @@
@@ -8231,7 +8231,7 @@ index 0000000..49a9ed8
 +    exit 1
 +fi
 +
-+git diff upstream/master...master > diff_upstream.diff
++git diff upstream/master...master -- . ":(exclude)*.diff" > diff_upstream.diff
 +git diff origin/bkp -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_bkp.diff
 +git diff origin/tarneaux -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_tarneaux.diff
 +
