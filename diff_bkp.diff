@@ -1,9 +1,9 @@
 diff --git a/CLAUDE_USAGE.md b/CLAUDE_USAGE.md
 new file mode 100644
-index 0000000..2750e32
+index 0000000..ac5adf7
 --- /dev/null
 +++ b/CLAUDE_USAGE.md
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,148 @@
 +# claude_usage — vendored module notes
 +
 +`claude_usage/` is a vendored copy of
@@ -34,11 +34,15 @@ index 0000000..2750e32
 +
 +1. **`.git/` removed**, so the widget is tracked as ordinary files in this repo
 +   rather than as a submodule or nested checkout.
-+2. **`.luacheckrc` is force-added.** This repo's root `.gitignore:4` lists
-+   `.luacheckrc`, a pattern with no slash, so it matches at *any* depth and
-+   would otherwise silently drop `claude_usage/.luacheckrc` from the commit and
-+   leave the vendored tree failing the `diff -r` check above. It was committed
-+   with `git add -f`. Re-add it the same way after any future update.
++2. Nothing else. `claude_usage/.luacheckrc` is tracked like any other file.
++
++   It briefly was not: the root `.gitignore` listed `.luacheckrc` with no
++   leading slash, so it matched at *any* depth and silently swallowed the
++   vendored one. That rule is inherited from lcpz/awesome-copycats
++   (commit `548347e`, "git-ignore .luacheckrc; closes #221") and exists so a
++   personal luacheck config at the repo root stays untracked. It is now
++   anchored as `/.luacheckrc`, which keeps that intent and stops it reaching
++   into subdirectories. No `git add -f` is needed.
 +
 +All local behaviour changes are **configuration**, passed as options to
 +`claude_usage.new()` in `themes/multicolor/theme.lua`. Keeping the module
@@ -126,11 +130,28 @@ index 0000000..2750e32
 +rm -rf claude_usage
 +git clone https://github.com/derblub/awesome-claude-usage claude_usage
 +rm -rf claude_usage/.git
-+git add claude_usage && git add -f claude_usage/.luacheckrc
++git add claude_usage
 +```
 +
 +Then re-check this file's option table against the new
 +`claude_usage/config.lua` defaults, and update the pinned commit above.
++
++## Checking for drift
++
++`./gen_diffs.sh` compares the vendored tree against upstream and writes
++`diff_claude_usage.diff`. Because the module is unpatched, that file should stay
++**empty**; content in it means either someone edited `claude_usage/` in place or
++upstream has moved on since the pin. The script prints which:
++
++```
++claude_usage is identical to https://github.com/derblub/awesome-claude-usage @ 9b2a26a
++```
++
++Unlike the other three diffs, this one cannot use a git remote — the vendored
++tree comes from an unrelated repository with its files at the root rather than
++under `claude_usage/` — so the script shallow-clones upstream to a temp dir and
++uses `git diff --no-index`. It skips with a message when the network is down,
++leaving the other diffs unaffected.
 diff --git a/README.org b/README.org
 deleted file mode 100644
 index dc7089d..0000000
@@ -8601,10 +8622,10 @@ index 0000000..bf254ac
 Binary files /dev/null and b/freedesktop/screenshot.png differ
 diff --git a/gen_diffs.sh b/gen_diffs.sh
 new file mode 100755
-index 0000000..6abcc0e
+index 0000000..49a9ed8
 --- /dev/null
 +++ b/gen_diffs.sh
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,50 @@
 +#! /usr/bin/bash
 +
 +if ! git rev-parse --verify upstream/master >/dev/null 2>&1; then
@@ -8616,6 +8637,45 @@ index 0000000..6abcc0e
 +git diff origin/bkp -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_bkp.diff
 +git diff origin/tarneaux -- . ":(exclude)*.diff" ":(exclude).gitignore" ":(exclude)patches/**" ":(exclude)patches_git/**" > diff_tarneaux.diff
 +
++# claude_usage/ is a vendored copy of an unrelated repo, so it has no remote here
++# and git diff cannot reach it. Clone upstream to a temp dir and compare trees.
++# The result shows local patches to the vendored copy (ideally none) together with
++# whatever upstream has added since it was vendored.
++CLAUDE_UPSTREAM="https://github.com/derblub/awesome-claude-usage"
++CLAUDE_DIR="claude_usage"
++
++gen_claude_diff() {
++    if [ ! -d "$CLAUDE_DIR" ]; then
++        echo "Skipping $CLAUDE_DIR: not vendored here."
++        return
++    fi
++
++    local tmp
++    tmp=$(mktemp -d) || return 1
++    trap 'rm -rf "$tmp"' RETURN
++
++    if ! git clone -q --depth 1 "$CLAUDE_UPSTREAM" "$tmp/upstream" 2>/dev/null; then
++        echo "Skipping $CLAUDE_DIR: could not reach $CLAUDE_UPSTREAM."
++        return
++    fi
++
++    local head
++    head=$(git -C "$tmp/upstream" rev-parse --short HEAD)
++    rm -rf "$tmp/upstream/.git"
++
++    # --no-index always exits non-zero when the trees differ; that is not an error.
++    git diff --no-index --src-prefix="a/$CLAUDE_DIR/" --dst-prefix="b/$CLAUDE_DIR/" \
++        "$tmp/upstream" "$CLAUDE_DIR" > diff_claude_usage.diff
++    : # swallow the exit status above so `set -e` users are not surprised
++
++    if [ -s diff_claude_usage.diff ]; then
++        echo "$CLAUDE_DIR differs from $CLAUDE_UPSTREAM @ $head (see diff_claude_usage.diff)"
++    else
++        echo "$CLAUDE_DIR is identical to $CLAUDE_UPSTREAM @ $head"
++    fi
++}
++
++gen_claude_diff
 diff --git a/lain b/lain
 deleted file mode 160000
 index c489aa6..0000000
