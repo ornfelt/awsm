@@ -28,11 +28,15 @@ The only differences from a fresh clone are:
 
 1. **`.git/` removed**, so the widget is tracked as ordinary files in this repo
    rather than as a submodule or nested checkout.
-2. **`.luacheckrc` is force-added.** This repo's root `.gitignore:4` lists
-   `.luacheckrc`, a pattern with no slash, so it matches at *any* depth and
-   would otherwise silently drop `claude_usage/.luacheckrc` from the commit and
-   leave the vendored tree failing the `diff -r` check above. It was committed
-   with `git add -f`. Re-add it the same way after any future update.
+2. Nothing else. `claude_usage/.luacheckrc` is tracked like any other file.
+
+   It briefly was not: the root `.gitignore` listed `.luacheckrc` with no
+   leading slash, so it matched at *any* depth and silently swallowed the
+   vendored one. That rule is inherited from lcpz/awesome-copycats
+   (commit `548347e`, "git-ignore .luacheckrc; closes #221") and exists so a
+   personal luacheck config at the repo root stays untracked. It is now
+   anchored as `/.luacheckrc`, which keeps that intent and stops it reaching
+   into subdirectories. No `git add -f` is needed.
 
 All local behaviour changes are **configuration**, passed as options to
 `claude_usage.new()` in `themes/multicolor/theme.lua`. Keeping the module
@@ -120,8 +124,25 @@ cd ~/.config/awesome
 rm -rf claude_usage
 git clone https://github.com/derblub/awesome-claude-usage claude_usage
 rm -rf claude_usage/.git
-git add claude_usage && git add -f claude_usage/.luacheckrc
+git add claude_usage
 ```
 
 Then re-check this file's option table against the new
 `claude_usage/config.lua` defaults, and update the pinned commit above.
+
+## Checking for drift
+
+`./gen_diffs.sh` compares the vendored tree against upstream and writes
+`diff_claude_usage.diff`. Because the module is unpatched, that file should stay
+**empty**; content in it means either someone edited `claude_usage/` in place or
+upstream has moved on since the pin. The script prints which:
+
+```
+claude_usage is identical to https://github.com/derblub/awesome-claude-usage @ 9b2a26a
+```
+
+Unlike the other three diffs, this one cannot use a git remote — the vendored
+tree comes from an unrelated repository with its files at the root rather than
+under `claude_usage/` — so the script shallow-clones upstream to a temp dir and
+uses `git diff --no-index`. It skips with a message when the network is down,
+leaving the other diffs unaffected.
