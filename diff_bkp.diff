@@ -1,9 +1,9 @@
 diff --git a/CLAUDE_USAGE.md b/CLAUDE_USAGE.md
 new file mode 100644
-index 0000000..ac5adf7
+index 0000000..b7d9a1e
 --- /dev/null
 +++ b/CLAUDE_USAGE.md
-@@ -0,0 +1,148 @@
+@@ -0,0 +1,153 @@
 +# claude_usage — vendored module notes
 +
 +`claude_usage/` is a vendored copy of
@@ -146,6 +146,11 @@ index 0000000..ac5adf7
 +```
 +claude_usage is identical to https://github.com/derblub/awesome-claude-usage @ 9b2a26a
 +```
++
++`~/.local/bin/my_scripts/git_push.sh` used to carry its own copy of the awsm
++diff commands, which had already drifted (`...master` there vs `..HEAD` here,
++producing different output). It now delegates to this script, so the logic lives
++in one place and a push regenerates `diff_claude_usage.diff` along with the rest.
 +
 +Unlike the other three diffs, this one cannot use a git remote — the vendored
 +tree comes from an unrelated repository with its files at the root rather than
