@@ -312,7 +312,7 @@ globalkeys = mytable.join(
               {description = "Launch terminal", group = "awesome"}),
     -- bind mod-ctrl-return: spawn term_wd.sh alacritty
     awful.key({ modkey, ctrlkey }, "Return", function () awful.spawn.with_shell( "~/.local/bin/my_scripts/term_wd.sh " .. secterminal ) end,
-              {description = "Launch terminal", group = "awesome"}),
+              {description = "Launch secondary terminal wd", group = "awesome"}),
 
     -- bind mod-ctrl-r: awesome.restart
     awful.key({ modkey, ctrlkey }, "r", awesome.restart,
@@ -391,12 +391,12 @@ globalkeys = mytable.join(
     -- bind mod-w: spawn yazi ~/
     awful.key({ modkey },            "w",     function ()
     awful.util.spawn(terminal.. " -e " .. filex .. " ~/")    end,
-              {description = "run ranger", group = "launcher"}),
+              {description = "run file explorer", group = "launcher"}),
 
     -- bind mod-e: spawn file_explorer_wd.sh
     awful.key({ modkey },            "e",        function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/file_explorer_wd.sh " .. terminal .. " " .. filex )   end,
-              {description = "run ranger in wd", group = "launcher"}),
+              {description = "run file explorer in wd", group = "launcher"}),
 
     -- bind mod-shift-e: spawn sysmenu_awsm.sh
     awful.key({ modkey, "Shift"     },            "e",        function ()
@@ -471,7 +471,7 @@ globalkeys = mytable.join(
     -- bind mod-ctrl-n: spawn open_notes.sh 1
     awful.key({ modkey, "Control"    },            "n",     function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 1 "..terminal)    end,
-              {description = "Ytop", group = "launcher"}),
+              {description = "Open notes 1", group = "launcher"}),
 
     -- bind mod-m: spawn nm-connection-editor
     awful.key({modkey},            "m",     function ()
@@ -486,7 +486,7 @@ globalkeys = mytable.join(
     -- bind mod-ctrl-m: spawn open_notes.sh 2
     awful.key({ modkey, "Control"    },            "m",     function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 2 "..terminal)   end,
-              {description = "Ytop", group = "launcher"}),
+              {description = "Open notes 2", group = "launcher"}),
 
     -- bind mod-p: spawn xrandr_helper.sh
     awful.key({modkey},            "p",     function ()
@@ -546,11 +546,11 @@ globalkeys = mytable.join(
 
     -- bind alt-tab: lain.util.tag_view_nonempty -1 (previous nonempty)
      awful.key({ altkey }, "Tab", function () lain.util.tag_view_nonempty(-1) end,
-               {description = "view  previous nonempty", group = "tag"}),
+               {description = "view previous nonempty", group = "tag"}),
 
     -- bind alt-shift-tab: lain.util.tag_view_nonempty +1 (next nonempty)
      awful.key({ altkey, "Shift" }, "Tab", function () lain.util.tag_view_nonempty(1) end,
-               {description = "view  previous nonempty", group = "tag"}),
+               {description = "view next nonempty", group = "tag"}),
 
     -- bind mod-j: awful.client.focus.byidx +1 (focus next)
     awful.key({ modkey,         }, "j", function () awful.client.focus.byidx( 1) end,
@@ -710,11 +710,11 @@ globalkeys = mytable.join(
     -- bind XF86MonBrightnessUp: spawn brightness.sh +10
     awful.key({ },  "XF86MonBrightnessUp", function ()
       awful.spawn("/home/jonas/.local/bin/my_scripts/brightness.sh +10") end,
-      {description = "Screenshot", group = "launcher"}),
+      {description = "Brightness +10%", group = "hotkeys"}),
     -- bind XF86MonBrightnessDown: spawn brightness.sh -10
     awful.key({ },  "XF86MonBrightnessDown", function ()
       awful.spawn("/home/jonas/.local/bin/my_scripts/brightness.sh -10") end,
-      {description = "Screenshot", group = "launcher"}),
+      {description = "Brightness -10%", group = "hotkeys"}),
 
     -- ALSA volume control
     --awful.key({ ctrlkey }, "Up",
