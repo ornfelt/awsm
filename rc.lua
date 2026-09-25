@@ -1107,7 +1107,7 @@ root.keys(globalkeys)
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
     {
-        rule = { class = "firefox", "firefox-esr" },
+        rule_any = { class = { "firefox", "firefox-esr" } },
         properties = {
             --maximized = false, -- Ensure Firefox is not always maximized
             floating = false,  -- Ensure it respects tiled layouts
