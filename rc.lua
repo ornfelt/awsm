@@ -805,7 +805,7 @@ clientkeys = mytable.join(
     awful.key({ modkey, "Shift"}, "h",
         function ()
             local c = client.focus
-            if c then c:move_to_screen(c.screen.index-1) end
+            if c then c:move_to_screen((c.screen.index - 2) % screen.count() + 1) end
         end, {description = "move client to prev screen", group = "client"}),
 
     -- awful.key({ modkey,         }, "n",
