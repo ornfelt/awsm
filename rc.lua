@@ -508,10 +508,6 @@ globalkeys = mytable.join(
     awful.util.spawn("sh /home/jonas/.local/bin/my_scripts/loadEww.sh")  end,
               {description = "Load Eww", group = "launcher"}),
 
-    -- bind mod-shift-section: dashboard_show
-    awful.key({modkey, "Shift" }, 'section', function() _G.dashboard_show() end,
-              {description = 'toggle dashboard', group = 'awesome'}),
-
     -- bind shift-F1: spawn show_keys.sh vim
     awful.key({ "Shift" },            "F1",     function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/show_keys.sh vim "..terminal)   end,
