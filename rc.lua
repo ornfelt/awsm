@@ -910,6 +910,7 @@ end
 
 local function switch_to_tag_move(tag_index)
   local num_screens = screen:count()
+  if not client.focus then return end
 
   if num_screens == 2 then
     local primary_screen = screen[1]
@@ -927,8 +928,8 @@ local function switch_to_tag_move(tag_index)
       local target_tag = secondary_screen.tags[tag_index]
       if target_tag then
         focused_client:move_to_tag(target_tag)
+        target_tag:view_only()
       end
-      target_tag:view_only()
       client.focus = focused_client
       focused_client:raise()
 
@@ -939,8 +940,8 @@ local function switch_to_tag_move(tag_index)
       local target_tag = primary_screen.tags[tag_index]
       if target_tag then
         focused_client:move_to_tag(target_tag)
+        target_tag:view_only()
       end
-      target_tag:view_only()
       client.focus = focused_client
       focused_client:raise()
 
@@ -973,6 +974,7 @@ end
 
 local function switch_to_tag_stay(tag_index)
   local num_screens = screen:count()
+  if not client.focus then return end
 
   if num_screens == 2 then
     local primary_screen = screen[1]
