@@ -863,6 +863,18 @@ globalkeys = mytable.join(
     awful.key({ modkey, "Control" }, "a", function() spawn("/home/jonas/.local/bin/my_scripts/picom_trans.sh +5") end,
         {description = "increase transparency", group = "custom"}),
 
+    -- bind mod-alt-a: spawn picom_trans.sh --reset (all windows back to picom.conf)
+    awful.key({ modkey, altkey }, "a", function() spawn("/home/jonas/.local/bin/my_scripts/picom_trans.sh --reset") end,
+        {description = "all windows back to picom.conf", group = "custom"}),
+
+    -- bind mod-alt-shift-a: spawn picom_trans.sh --all -5 (all windows more transparent)
+    awful.key({ modkey, altkey, "Shift" }, "a", function() spawn("/home/jonas/.local/bin/my_scripts/picom_trans.sh --all -5") end,
+        {description = "all windows more transparent", group = "custom"}),
+
+    -- bind mod-alt-ctrl-a: spawn picom_trans.sh --all +5 (all windows more opaque)
+    awful.key({ modkey, altkey, "Control" }, "a", function() spawn("/home/jonas/.local/bin/my_scripts/picom_trans.sh --all +5") end,
+        {description = "all windows more opaque", group = "custom"}),
+
     -- Dynamic tagging
     -- awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag() end,
     --     {description = "add new tag", group = "tag"}),
