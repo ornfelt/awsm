@@ -805,6 +805,15 @@ globalkeys = mytable.join(
     --]]
 )
 
+-- Move c to the screen dir (+1/-1) away but stay on this one (dwm tagmon).
+-- move_to_screen wraps the index and follows the client, so focus the
+-- original screen again afterwards
+local function send_to_screen(c, dir)
+    local s = awful.screen.focused()
+    c:move_to_screen(c.screen.index + dir)
+    awful.screen.focus(s)
+end
+
 clientkeys = mytable.join(
     -- awful.key({ altkey, "Shift" }, "m",      lain.util.magnify_client,
     --           {description = "magnify client", group = "client"}),
@@ -868,6 +877,19 @@ clientkeys = mytable.join(
             local c = client.focus
             if c then c:move_to_screen((c.screen.index - 2) % screen.count() + 1) end
         end, {description = "move client to prev screen", group = "client"}),
+
+    -- bind mod-ctrl-l: send client to next screen, don't follow
+    awful.key({ modkey, ctrlkey }, "l", function (c) send_to_screen(c, 1) end,
+        {description = "send client to next screen (stay)", group = "client"}),
+    -- bind mod-ctrl-h: send client to previous screen, don't follow
+    awful.key({ modkey, ctrlkey }, "h", function (c) send_to_screen(c, -1) end,
+        {description = "send client to prev screen (stay)", group = "client"}),
+    -- bind mod-shift-right: send client to next screen, don't follow
+    awful.key({ modkey, "Shift" }, "Right", function (c) send_to_screen(c, 1) end,
+        {description = "send client to next screen (stay)", group = "client"}),
+    -- bind mod-shift-left: send client to previous screen, don't follow
+    awful.key({ modkey, "Shift" }, "Left", function (c) send_to_screen(c, -1) end,
+        {description = "send client to prev screen (stay)", group = "client"}),
 
     -- awful.key({ modkey,         }, "n",
     --     function (c)
