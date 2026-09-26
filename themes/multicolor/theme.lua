@@ -730,7 +730,9 @@ end
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    -- lain finds the dropdown by its instance name; wezterm has no flag to set
+    -- it (lain's default "-name %s" makes wezterm exit), so use st's -n
+    s.quake = lain.util.quake({ app = "st", argname = "-n %s" })
 
     -- If wallpaper is a function, call it with the screen
     local wallpaper = theme.wallpaper
