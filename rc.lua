@@ -344,7 +344,7 @@ globalkeys = mytable.join(
 
     -- bind mod-a: spawn tmux_attach.sh
     awful.key({ modkey },            "a",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/tmux_attach.sh "..terminal)  end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/tmux_attach.sh "..terminal)  end,
               {description = "run tmux", group = "launcher"}),
 
     -- bind mod-g: spawn nvim_fzf.sh
@@ -354,50 +354,50 @@ globalkeys = mytable.join(
 
     -- bind mod-d: spawn rofi
     awful.key({ modkey },            "d",     function ()
-    awful.util.spawn("rofi -show run -theme ~/.config/rofi/themes/gruvbox/gruvbox-dark.rasi")   end,
+    awful.spawn("rofi -show run -theme ~/.config/rofi/themes/gruvbox/gruvbox-dark.rasi")   end,
               {description = "run rofi", group = "launcher"}),
 
     -- bind mod-c: spawn term_calc.sh
     awful.key({ modkey },            "c",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/term_calc.sh "..terminal)   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/term_calc.sh "..terminal)   end,
               {description = "calculator", group = "launcher"}),
 
     -- bind mod-shift-c: spawn code_helper.sh new
     awful.key({ modkey, "Shift" },            "c",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh new "..terminal)   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh new "..terminal)   end,
               {description = "code launcher (new)", group = "launcher"}),
 
     --awful.key({ modkey, "Control" },            "c",     function ()
-    --awful.util.spawn("GTK_THEME=Adwaita:dark gnome-calendar")   end,
+    --awful.spawn("GTK_THEME=Adwaita:dark gnome-calendar")   end,
     --          {description = "calendar", group = "launcher"}),
     -- bind mod-ctrl-c: spawn yad calendar
     awful.key({ modkey, "Control" },            "c",     function ()
-    awful.util.spawn("yad --calendar --no-buttons")   end,
+    awful.spawn("yad --calendar --no-buttons")   end,
               {description = "calendar", group = "launcher"}),
 
     -- bind mod-shift-d: spawn code_helper.sh old
     awful.key({ modkey, "Shift" },            "d",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh old " .. terminal)   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh old " .. terminal)   end,
               {description = "code launcher (old)", group = "launcher"}),
 
     -- bind mod-r: spawn dmenu_run
     awful.key({ modkey },            "r",     function ()
-    awful.util.spawn("dmenu_run -i -l 20")    end,
+    awful.spawn("dmenu_run -i -l 20")    end,
               {description = "run dmenu", group = "launcher"}),
 
     -- bind mod-w: spawn yazi ~/
     awful.key({ modkey },            "w",     function ()
-    awful.util.spawn(terminal.. " -e " .. filex .. " ~/")    end,
+    awful.spawn(terminal.. " -e " .. filex .. " ~/")    end,
               {description = "run file explorer", group = "launcher"}),
 
     -- bind mod-e: spawn file_explorer_wd.sh
     awful.key({ modkey },            "e",        function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/file_explorer_wd.sh " .. terminal .. " " .. filex )   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/file_explorer_wd.sh " .. terminal .. " " .. filex )   end,
               {description = "run file explorer in wd", group = "launcher"}),
 
     -- bind mod-shift-e: spawn sysmenu_awsm.sh
     awful.key({ modkey, "Shift"     },            "e",        function ()
-    awful.util.spawn("sh /home/jonas/.local/bin/my_scripts/sysmenu_awsm.sh")  end,
+    awful.spawn("sh /home/jonas/.local/bin/my_scripts/sysmenu_awsm.sh")  end,
               {description = "Run sysmenu", group = "launcher"}),
 
     -- bind mod-shift-s: spawn win_screenshot_awsm.sh
@@ -432,82 +432,82 @@ globalkeys = mytable.join(
 
     -- bind mod-v: spawn clip_history.sh greenclip
     awful.key({modkey},            "v",        function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/clip_history.sh greenclip")   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/clip_history.sh greenclip")   end,
               {description = "clip_history", group = "launcher"}),
 
     -- bind mod-period: spawn emojipick
     awful.key({modkey},            "period",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/emojipick/emojipick")   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/emojipick/emojipick")   end,
               {description = "Emojipick", group = "launcher"}),
 
     -- bind mod-b: spawn htop
     awful.key({modkey},            "b",     function ()
-    awful.util.spawn(terminal.. " -e sudo htop")    end,
+    awful.spawn(terminal.. " -e sudo htop")    end,
               {description = "Htop", group = "launcher"}),
 
     -- bind mod-shift-b: spawn btop
     awful.key({ modkey, "Shift"    },            "b",     function ()
-    awful.util.spawn(terminal.. " -e sudo btop") end,
+    awful.spawn(terminal.. " -e sudo btop") end,
               {description = "Btop", group = "launcher"}),
 
     -- bind mod-ctrl-b: spawn ytop
     awful.key({ modkey, "Control"    },            "b",     function ()
-    awful.util.spawn(terminal .. " -e sudo ytop")    end,
+    awful.spawn(terminal .. " -e sudo ytop")    end,
               {description = "Ytop", group = "launcher"}),
 
     -- bind mod-n: spawn files_wd.sh
     awful.key({ modkey },            "n",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/files_wd.sh")     end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/files_wd.sh")     end,
               {description = "run file manager in wd", group = "launcher"}),
 
     -- bind mod-shift-n: spawn thunar
     awful.key({ modkey, "Shift"    },            "n",     function ()
-    awful.util.spawn("thunar")  end,
+    awful.spawn("thunar")  end,
               {description = "run thunar", group = "launcher"}),
 
     -- bind mod-ctrl-n: spawn open_notes.sh 1
     awful.key({ modkey, "Control"    },            "n",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 1 "..terminal)    end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 1 "..terminal)    end,
               {description = "Open notes 1", group = "launcher"}),
 
     -- bind mod-m: spawn nm-connection-editor
     awful.key({modkey},            "m",     function ()
-    awful.util.spawn("nm-connection-editor")  end,
+    awful.spawn("nm-connection-editor")  end,
               {description = "Network connections", group = "launcher"}),
 
     -- bind mod-shift-m: spawn spotify
     awful.key({ modkey, "Shift"    },            "m",     function ()
-    awful.util.spawn("spotify")      end,
+    awful.spawn("spotify")      end,
               {description = "Spotify", group = "launcher"}),
 
     -- bind mod-ctrl-m: spawn open_notes.sh 2
     awful.key({ modkey, "Control"    },            "m",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 2 "..terminal)   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/open_notes.sh 2 "..terminal)   end,
               {description = "Open notes 2", group = "launcher"}),
 
     -- bind mod-p: spawn xrandr_helper.sh
     awful.key({modkey},            "p",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/xrandr_helper.sh")  end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/xrandr_helper.sh")  end,
               {description = "Xrandr", group = "launcher"}),
 
     -- bind mod-t: spawn script_copy.sh
     awful.key({modkey},            "t",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/script_copy.sh")  end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/script_copy.sh")  end,
               {description = "Script_copy", group = "launcher"}),
 
     -- bind mod-shift-t: spawn script_helper.sh
     awful.key({ modkey, "Shift"    },           "t",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/script_helper.sh "..terminal)      end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/script_helper.sh "..terminal)      end,
               {description = "Script_helper", group = "launcher"}),
 
     -- bind mod-section: spawn loadEww.sh
     awful.key({modkey },            "section",     function ()
-    awful.util.spawn("sh /home/jonas/.local/bin/my_scripts/loadEww.sh")  end,
+    awful.spawn("sh /home/jonas/.local/bin/my_scripts/loadEww.sh")  end,
               {description = "Load Eww", group = "launcher"}),
 
     -- bind shift-F1: spawn show_keys.sh vim
     awful.key({ "Shift" },            "F1",     function ()
-    awful.util.spawn("/home/jonas/.local/bin/my_scripts/show_keys.sh vim "..terminal)   end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/show_keys.sh vim "..terminal)   end,
               {description = "vim keybinds", group = "launcher"}),
 
     -- bind Print: spawn screenshot_select.sh
