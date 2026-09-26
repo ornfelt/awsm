@@ -1190,6 +1190,38 @@ for i = 1, 9 do
   )
 end
 
+globalkeys = mytable.join(globalkeys,
+  -- bind mod-0: view all tags on the focused screen
+  awful.key({ modkey }, "#19", function ()
+      local s = awful.screen.focused()
+      awful.tag.viewmore(s.tags, s)
+    end,
+    {description = "view all tags", group = "tag"}),
+
+  -- bind mod-shift-0: put focused client on all tags
+  awful.key({ modkey, "Shift" }, "#19", function ()
+      local c = client.focus
+      if c then c:tags(c.screen.tags) end
+    end,
+    {description = "put focused client on all tags", group = "tag"}),
+
+  -- Move the focused client one tag over and stay (dwm shifttag); through
+  -- switch_to_tag_stay, so the odd/even split sends it to the right screen
+  -- bind mod-shift-y: move focused client to next tag
+  awful.key({ modkey, "Shift" }, "y", function ()
+      local t = awful.screen.focused().selected_tag
+      if t then switch_to_tag_stay(t.index % 9 + 1) end
+    end,
+    {description = "move focused client to next tag (stay)", group = "tag"}),
+
+  -- bind mod-shift-o: move focused client to previous tag
+  awful.key({ modkey, "Shift" }, "o", function ()
+      local t = awful.screen.focused().selected_tag
+      if t then switch_to_tag_stay((t.index - 2) % 9 + 1) end
+    end,
+    {description = "move focused client to previous tag (stay)", group = "tag"})
+)
+
 clientbuttons = mytable.join(
     -- bind button1: activate client (focus)
     awful.button({ }, 1, function (c)
