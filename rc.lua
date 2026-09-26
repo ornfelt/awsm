@@ -713,28 +713,29 @@ globalkeys = mytable.join(
       awful.spawn("/home/jonas/.local/bin/my_scripts/brightness.sh -10") end,
       {description = "Brightness -10%", group = "hotkeys"}),
 
-    -- ALSA volume control
+    -- Volume control: pactl like dwm. easy_async so awesome doesn't block;
+    -- the ALSA widget reads the same sink through Master, so just refresh it
     --awful.key({ ctrlkey }, "Up",
-    -- bind XF86AudioRaiseVolume: amixer volume +1%
+    -- bind XF86AudioRaiseVolume: pactl volume +5%
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async("pactl set-sink-volume @DEFAULT_SINK@ +5%",
+                function () beautiful.volume.update() end)
         end,
-        {description = "Volume +1%", group = "hotkeys"}),
+        {description = "Volume +5%", group = "hotkeys"}),
     --awful.key({ ctrlkey }, "Down",
-    -- bind XF86AudioLowerVolume: amixer volume -1%
+    -- bind XF86AudioLowerVolume: pactl volume -5%
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async("pactl set-sink-volume @DEFAULT_SINK@ -5%",
+                function () beautiful.volume.update() end)
         end,
-        {description = "Volume -1%", group = "hotkeys"}),
-    -- bind XF86AudioMute: amixer toggle mute
+        {description = "Volume -5%", group = "hotkeys"}),
+    -- bind XF86AudioMute: pactl toggle mute
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async("pactl set-sink-mute @DEFAULT_SINK@ toggle",
+                function () beautiful.volume.update() end)
         end,
         {description = "Toggle mute", group = "hotkeys"})
 
