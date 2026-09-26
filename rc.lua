@@ -1065,18 +1065,25 @@ for i = 1, 9 do
       end,
       {description = "move focused client to tag #"..i.." (stay)", group = "tag"}),
 
-    -- Toggle tag on focused client.
-    -- bind mod-ctrl-shift-[1-9]: toggle client on tag
+    -- Show/hide tag alongside the current one (dwm toggleview).
+    -- bind mod-ctrl-shift-[1-9]: toggle view of tag
     awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
       function ()
-        if client.focus then
-          local tag = client.focus.screen.tags[i]
-          if tag then
-            client.focus:toggle_tag(tag)
-          end
+        -- Toggle the tag on the screen that owns it, like switch_to_tag
+        local num_screens = screen:count()
+        local s = awful.screen.focused()
+        if num_screens == 2 then
+          s = screen[is_odd_with_mask(i) and 1 or 2]
+        elseif num_screens > 2 then
+          s = screen[((i - 1) % num_screens) + 1]
         end
+        local tag = s.tags[i]
+        if not tag then return end
+        -- Like dwm, never leave the screen with no tag selected
+        if tag.selected and #s.selected_tags == 1 then return end
+        awful.tag.viewtoggle(tag)
       end,
-      {description = "toggle focused client on tag #" .. i, group = "tag"})
+      {description = "toggle view of tag #" .. i, group = "tag"})
   )
 end
 
