@@ -544,6 +544,13 @@ local memory = lain.widget.mem({
     end
 })
 
+-- left click: notification with details (interfaces, top memory and cpu
+-- processes), from dwm's sb-sysinfo blocks
+set_buttons({ netdownicon, netdowninfo, netupicon, netupinfo.widget },
+    my_table.join(block_click("sb-sysinfo net", 1)))
+set_buttons({ memicon, memory.widget }, my_table.join(block_click("sb-sysinfo mem", 1)))
+set_buttons({ cpuicon, cpu.widget }, my_table.join(block_click("sb-sysinfo cpu", 1)))
+
 -- MPD
 local mpdicon = wibox.widget.imagebox()
 theme.mpd = lain.widget.mpd({
