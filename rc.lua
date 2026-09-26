@@ -114,7 +114,7 @@ local editor       = os.getenv("EDITOR") or "nvim"
 local browser      = "firefox"
 
 local terminal    = "wezterm"
-local secterminal = "alacritty"
+local secterminal = "st"
 --local filex       = "ranger"
 --local filex       = "lf"
 local filex       = "yazi"
@@ -307,7 +307,7 @@ globalkeys = mytable.join(
     -- bind mod-shift-return: spawn terminal
     awful.key({ modkey, "Shift" }, "Return", function () awful.spawn( terminal ) end,
               {description = "Launch terminal", group = "awesome"}),
-    -- bind mod-ctrl-return: spawn term_wd.sh alacritty
+    -- bind mod-ctrl-return: spawn term_wd.sh st
     awful.key({ modkey, ctrlkey }, "Return", function () awful.spawn.with_shell( "~/.local/bin/my_scripts/term_wd.sh " .. secterminal ) end,
               {description = "Launch secondary terminal wd", group = "awesome"}),
 
