@@ -297,6 +297,13 @@ check_toggle_widget_visibility()
 -- }}}
 
 -- {{{ Key bindings
+
+-- Volume control: pactl like dwm. easy_async so awesome doesn't block;
+-- the ALSA widget reads the same sink through Master, so just refresh it
+local function pactl(args)
+    awful.spawn.easy_async("pactl " .. args, function () beautiful.volume.update() end)
+end
+
 globalkeys = mytable.join(
     -- {{{ Personal keybindings
 
@@ -725,31 +732,28 @@ globalkeys = mytable.join(
       awful.spawn("/home/jonas/.local/bin/my_scripts/brightness.sh -10") end,
       {description = "Brightness -10%", group = "hotkeys"}),
 
-    -- Volume control: pactl like dwm. easy_async so awesome doesn't block;
-    -- the ALSA widget reads the same sink through Master, so just refresh it
+    -- Volume control (pactl helper above)
     --awful.key({ ctrlkey }, "Up",
     -- bind XF86AudioRaiseVolume: pactl volume +5%
-    awful.key({ }, "XF86AudioRaiseVolume",
-        function ()
-            awful.spawn.easy_async("pactl set-sink-volume @DEFAULT_SINK@ +5%",
-                function () beautiful.volume.update() end)
-        end,
+    awful.key({ }, "XF86AudioRaiseVolume", function () pactl("set-sink-volume @DEFAULT_SINK@ +5%") end,
         {description = "Volume +5%", group = "hotkeys"}),
     --awful.key({ ctrlkey }, "Down",
     -- bind XF86AudioLowerVolume: pactl volume -5%
-    awful.key({ }, "XF86AudioLowerVolume",
-        function ()
-            awful.spawn.easy_async("pactl set-sink-volume @DEFAULT_SINK@ -5%",
-                function () beautiful.volume.update() end)
-        end,
+    awful.key({ }, "XF86AudioLowerVolume", function () pactl("set-sink-volume @DEFAULT_SINK@ -5%") end,
         {description = "Volume -5%", group = "hotkeys"}),
     -- bind XF86AudioMute: pactl toggle mute
-    awful.key({ }, "XF86AudioMute",
-        function ()
-            awful.spawn.easy_async("pactl set-sink-mute @DEFAULT_SINK@ toggle",
-                function () beautiful.volume.update() end)
-        end,
-        {description = "Toggle mute", group = "hotkeys"})
+    awful.key({ }, "XF86AudioMute", function () pactl("set-sink-mute @DEFAULT_SINK@ toggle") end,
+        {description = "Toggle mute", group = "hotkeys"}),
+    -- F10-F12 volume keys, like dwm
+    -- bind F10: pactl toggle mute
+    awful.key({ }, "F10", function () pactl("set-sink-mute @DEFAULT_SINK@ toggle") end,
+        {description = "Toggle mute", group = "hotkeys"}),
+    -- bind F11: pactl volume -5%
+    awful.key({ }, "F11", function () pactl("set-sink-volume @DEFAULT_SINK@ -5%") end,
+        {description = "Volume -5%", group = "hotkeys"}),
+    -- bind F12: pactl volume +5%
+    awful.key({ }, "F12", function () pactl("set-sink-volume @DEFAULT_SINK@ +5%") end,
+        {description = "Volume +5%", group = "hotkeys"})
 
     -- Copy primary to clipboard (terminals to gtk)
     -- awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
