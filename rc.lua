@@ -671,8 +671,12 @@ globalkeys = mytable.join(
     spawn("/home/jonas/.local/bin/my_scripts/script_helper.sh "..terminal)      end,
               {description = "Script_helper", group = "launcher"}),
 
-    -- bind mod-section: spawn loadEww.sh
+    -- bind mod-section: spawn sysfetch.sh (system info notification, like neofetch)
     awful.key({modkey },            "section",     function ()
+    spawn("/home/jonas/.local/bin/my_scripts/sysfetch.sh")  end,
+              {description = "System info", group = "launcher"}),
+    -- bind mod-shift-section: spawn loadEww.sh (#49: shift-section is onehalf on the Swedish layout)
+    awful.key({modkey, "Shift" },   "#49",         function ()
     spawn("sh /home/jonas/.local/bin/my_scripts/loadEww.sh")  end,
               {description = "Load Eww", group = "launcher"}),
 
