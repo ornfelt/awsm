@@ -395,9 +395,9 @@ globalkeys = mytable.join(
     awful.spawn("/home/jonas/.local/bin/my_scripts/file_explorer_wd.sh " .. terminal .. " " .. filex )   end,
               {description = "run file explorer in wd", group = "launcher"}),
 
-    -- bind mod-shift-e: spawn sysmenu_awsm.sh
+    -- bind mod-shift-e: spawn sysmenu.sh
     awful.key({ modkey, "Shift"     },            "e",        function ()
-    awful.spawn("sh /home/jonas/.local/bin/my_scripts/sysmenu_awsm.sh")  end,
+    awful.spawn("/home/jonas/.local/bin/my_scripts/sysmenu.sh")  end,
               {description = "Run sysmenu", group = "launcher"}),
 
     -- bind mod-shift-s: spawn win_screenshot_awsm.sh
