@@ -733,6 +733,11 @@ function theme.at_screen_connect(s)
     -- lain finds the dropdown by its instance name; wezterm has no flag to set
     -- it (lain's default "-name %s" makes wezterm exit), so use st's -n
     s.quake = lain.util.quake({ app = "st", argname = "-n %s" })
+    -- Scratchpads like dwm's spterm (python3) and spcalc (plain st)
+    s.quake_py = lain.util.quake({ app = "st", argname = "-n %s", name = "spterm",
+        extra = "-e python3", width = 0.5, height = 0.5, vert = "center", horiz = "center" })
+    s.quake_calc = lain.util.quake({ app = "st", argname = "-n %s", name = "spcalc",
+        width = 0.5, height = 0.5, vert = "center", horiz = "center" })
 
     -- If wallpaper is a function, call it with the screen
     local wallpaper = theme.wallpaper

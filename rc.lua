@@ -709,6 +709,12 @@ globalkeys = mytable.join(
     -- bind mod-F12: toggle dropdown application (quake)
     awful.key({ modkey, }, "F12", function () awful.screen.focused().quake:toggle() end,
               {description = "dropdown application", group = "super"}),
+    -- bind mod-apostrophe: toggle python3 scratchpad (dwm spterm)
+    awful.key({ modkey }, "apostrophe", function () awful.screen.focused().quake_py:toggle() end,
+              {description = "python3 scratchpad", group = "super"}),
+    -- bind mod-shift-apostrophe: toggle terminal scratchpad (dwm spcalc)
+    awful.key({ modkey, "Shift" }, "apostrophe", function () awful.screen.focused().quake_calc:toggle() end,
+              {description = "terminal scratchpad", group = "super"}),
 
     -- Widgets popups
     -- awful.key({ modkey, altkey, }, "c", function () lain.widget.cal.show(7) end,
