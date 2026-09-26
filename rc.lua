@@ -123,6 +123,10 @@ local filex       = "yazi"
 -- quits awesome straight away
 local quit_uses_sysmenu = true
 
+-- true: switching layout applies it to every tag (on all screens), false:
+-- only the current tag changes (awesome's default per-tag layouts)
+local layout_applies_to_all_tags = true
+
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 awful.layout.layouts = {
@@ -159,6 +163,24 @@ lain.layout.cascade.tile.offset_y      = 32
 lain.layout.cascade.tile.extra_padding = 5
 lain.layout.cascade.tile.nmaster       = 5
 lain.layout.cascade.tile.ncol          = 2
+
+-- Mirror a layout change on one tag to all other tags. Hooks the tag signal
+-- rather than the keybindings, so layoutbox clicks and awful.layout.inc are
+-- covered too. The guard stops the other tags' own property::layout signals
+-- from propagating again.
+if layout_applies_to_all_tags then
+    local syncing_layout = false
+    tag.connect_signal("property::layout", function(t)
+        if syncing_layout then return end
+        syncing_layout = true
+        for _, other in ipairs(root.tags()) do
+            if other ~= t and other.layout ~= t.layout then
+                other.layout = t.layout
+            end
+        end
+        syncing_layout = false
+    end)
+end
 
 -- https://awesomewm.org/doc/api/classes/client.html
 awful.util.taglist_buttons = mytable.join(
