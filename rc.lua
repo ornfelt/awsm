@@ -541,13 +541,13 @@ globalkeys = mytable.join(
     --awful.key({ altkey, "Shift" }, "Tab", awful.tag.viewprev,
     --    {description = "view previous", group = "tag"}),
 
-    -- bind alt-tab: lain.util.tag_view_nonempty -1 (previous nonempty)
-     awful.key({ altkey }, "Tab", function () lain.util.tag_view_nonempty(-1) end,
-               {description = "view previous nonempty", group = "tag"}),
-
-    -- bind alt-shift-tab: lain.util.tag_view_nonempty +1 (next nonempty)
-     awful.key({ altkey, "Shift" }, "Tab", function () lain.util.tag_view_nonempty(1) end,
+    -- bind alt-tab: lain.util.tag_view_nonempty +1 (next nonempty)
+     awful.key({ altkey }, "Tab", function () lain.util.tag_view_nonempty(1) end,
                {description = "view next nonempty", group = "tag"}),
+
+    -- bind alt-shift-tab: lain.util.tag_view_nonempty -1 (previous nonempty)
+     awful.key({ altkey, "Shift" }, "Tab", function () lain.util.tag_view_nonempty(-1) end,
+               {description = "view previous nonempty", group = "tag"}),
 
     -- bind mod-j: awful.client.focus.byidx +1 (focus next)
     awful.key({ modkey,         }, "j", function () awful.client.focus.byidx( 1) end,
