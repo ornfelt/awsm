@@ -442,18 +442,18 @@ globalkeys = mytable.join(
 
     -- bind mod-b: spawn htop
     awful.key({modkey},            "b",     function ()
-    awful.spawn(terminal.. " -e sudo htop")    end,
+    awful.spawn(terminal.. " -e htop")    end,
               {description = "Htop", group = "launcher"}),
 
     -- bind mod-shift-b: spawn btop
     awful.key({ modkey, "Shift"    },            "b",     function ()
-    awful.spawn(terminal.. " -e sudo btop") end,
+    awful.spawn(terminal.. " -e btop") end,
               {description = "Btop", group = "launcher"}),
 
-    -- bind mod-ctrl-b: spawn ytop
+    -- bind mod-ctrl-b: spawn sudo btop
     awful.key({ modkey, "Control"    },            "b",     function ()
-    awful.spawn(terminal .. " -e sudo ytop")    end,
-              {description = "Ytop", group = "launcher"}),
+    awful.spawn(terminal .. " -e sudo btop")    end,
+              {description = "Btop (root)", group = "launcher"}),
 
     -- bind mod-n: spawn files_wd.sh
     awful.key({ modkey },            "n",     function ()
