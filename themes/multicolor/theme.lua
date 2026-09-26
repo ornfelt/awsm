@@ -459,6 +459,41 @@ theme.volume = lain.widget.alsa({
     end
 })
 
+-- Clicks on the status widgets, like dwm's clickable blocks: the block's
+-- statusbar script runs with BLOCK_BUTTON set, so both bars do the same.
+-- on_done, if given, updates the widget once the script is done.
+local statusbar_dir = os.getenv("HOME") .. "/.local/bin/statusbar/"
+
+local function block_click(script, button, on_done)
+    return awful.button({}, button, function()
+        awful.spawn.easy_async_with_shell("BLOCK_BUTTON=" .. button .. " " .. statusbar_dir .. script,
+            function() if on_done then on_done() end end)
+    end)
+end
+
+local function set_buttons(widgets, buttons)
+    for _, w in ipairs(widgets) do
+        w:buttons(buttons)
+    end
+end
+
+-- left click: mute, scroll: volume -/+ 1%
+set_buttons({ volicon, theme.volume.widget }, my_table.join(
+    block_click("sb-volume", 1, theme.volume.update),
+    block_click("sb-volume", 4, theme.volume.update),
+    block_click("sb-volume", 5, theme.volume.update)))
+-- left click: notification (forecast, sensors and top processes, acpi),
+-- right click: update the widget
+set_buttons({ weathericon, weather_widget }, my_table.join(
+    block_click("weather", 1),
+    awful.button({}, 3, update_weather_widget)))
+set_buttons({ tempicon, temp.widget }, my_table.join(
+    block_click("cputemp", 1),
+    awful.button({}, 3, temp.update)))
+set_buttons({ baticon, bat.widget }, my_table.join(
+    block_click("sb-battery", 1),
+    awful.button({}, 3, bat.update)))
+
 -- Net
 --local netdownicon = wibox.widget.imagebox(theme.widget_netdown)
 local netdowninfo = wibox.widget.textbox()
