@@ -338,8 +338,8 @@ globalkeys = mytable.join(
         end,
         {description = "Show/hide wibox (bar)", group = "awesome"}),
 
-    -- bind mod-ctrl-p: toggle_widget_visibility
-    awful.key({ modkey, ctrlkey }, "p", function() toggle_widget_visibility() end,
+    -- bind mod-alt-p: toggle_widget_visibility
+    awful.key({ modkey, altkey }, "p", function() toggle_widget_visibility() end,
               { description = "toggle widgets visibility", group = "custom" }),
 
     -- bind mod-a: spawn tmux_attach.sh
