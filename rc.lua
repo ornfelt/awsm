@@ -297,6 +297,19 @@ check_toggle_widget_visibility()
 --    awful.button({ }, 5, awful.tag.viewprev)
 --))
 
+-- Show/hide the bar(s) of one screen (dwm togglebar)
+local function toggle_bar(s)
+    s.mywibox.visible = not s.mywibox.visible
+    if s.mybottomwibox then
+        s.mybottomwibox.visible = not s.mybottomwibox.visible
+    end
+end
+
+root.buttons(mytable.join(
+    -- bind button2 on the desktop: toggle the bar on that screen (dwm rootwin-button2)
+    awful.button({ }, 2, function () toggle_bar(mouse.screen) end)
+))
+
 -- }}}
 
 -- {{{ Key bindings
@@ -364,13 +377,7 @@ globalkeys = mytable.join(
               { description = "toggle widgets visibility", group = "custom" }),
 
     -- bind mod-ctrl-shift-p: toggle wibox on the focused screen only
-    awful.key({ modkey, ctrlkey, "Shift" }, "p", function ()
-            local s = awful.screen.focused()
-            s.mywibox.visible = not s.mywibox.visible
-            if s.mybottomwibox then
-                s.mybottomwibox.visible = not s.mybottomwibox.visible
-            end
-        end,
+    awful.key({ modkey, ctrlkey, "Shift" }, "p", function () toggle_bar(awful.screen.focused()) end,
         {description = "Show/hide wibox (bar) on this screen", group = "awesome"}),
 
     -- bind mod-a: spawn tmux_attach.sh
@@ -1245,7 +1252,20 @@ clientbuttons = mytable.join(
     awful.button({ modkey }, 3, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
         awful.mouse.client.resize(c)
-    end)
+    end),
+    -- Gaps with the mouse, like dwm
+    -- bind mod-button2: default gaps (like mod-x)
+    awful.button({ modkey }, 2, function (c)
+        local t = c.screen.selected_tag
+        if t then
+            t.gap = beautiful.useless_gap
+            awful.layout.arrange(c.screen)
+        end
+    end),
+    -- bind mod-button4: increment gaps by 1 (scroll up)
+    awful.button({ modkey }, 4, function (c) lain.util.useless_gaps_resize(1, c.screen) end),
+    -- bind mod-button5: decrement gaps by 1 (scroll down)
+    awful.button({ modkey }, 5, function (c) lain.util.useless_gaps_resize(-1, c.screen) end)
 )
 
 -- Set keys
