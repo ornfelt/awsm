@@ -119,6 +119,10 @@ local secterminal = "st"
 --local filex       = "lf"
 local filex       = "yazi"
 
+-- mod-shift-q: true opens the power menu (sysmenu.sh, same as dwm), false
+-- quits awesome straight away
+local quit_uses_sysmenu = true
+
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 awful.layout.layouts = {
@@ -349,9 +353,15 @@ globalkeys = mytable.join(
     awful.key({ modkey, ctrlkey }, "r", awesome.restart,
               {description = "Reload awesome", group = "awesome"}),
 
-    -- bind mod-shift-q: awesome.quit
-    awful.key({ modkey, "Shift" }, "q",   awesome.quit,
-              {description = "Quit awesome", group = "awesome"}),
+    -- bind mod-shift-q: spawn sysmenu.sh, or awesome.quit (quit_uses_sysmenu)
+    awful.key({ modkey, "Shift" }, "q", function ()
+            if quit_uses_sysmenu then
+                awful.spawn("/home/jonas/.local/bin/my_scripts/sysmenu.sh")
+            else
+                awesome.quit()
+            end
+        end,
+        {description = quit_uses_sysmenu and "Quit (power menu)" or "Quit awesome", group = "awesome"}),
 
     -- bind F1: hotkeys_popup.show_help
     awful.key({ }, "F1",      hotkeys_popup.show_help,
