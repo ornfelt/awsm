@@ -453,6 +453,16 @@ globalkeys = mytable.join(
     awful.spawn("/home/jonas/.local/bin/my_scripts/suspend_awsm.sh")   end,
               {description = "Suspend", group = "launcher"}),
 
+    -- bind mod-ctrl-comma: spawn suspend_mute.sh
+    awful.key({ modkey, ctrlkey    },            "comma",     function ()
+    awful.spawn.with_shell("~/.local/bin/my_scripts/alert_exit.sh && ~/.local/bin/my_scripts/suspend_mute.sh")   end,
+              {description = "Mute and suspend", group = "launcher"}),
+
+    -- bind mod-comma: spawn progrm_helper.sh
+    awful.key({ modkey },            "comma",     function ()
+    awful.spawn("/home/jonas/.local/bin/my_scripts/progrm_helper.sh " .. terminal)   end,
+              {description = "Open a note (progrm_helper)", group = "launcher"}),
+
     -- bind mod-shift-period: spawn suspend_awsm_lock.sh
     awful.key({ modkey, "Shift"    },            "period",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/suspend_awsm_lock.sh")    end,
