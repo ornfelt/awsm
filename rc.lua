@@ -380,10 +380,10 @@ globalkeys = mytable.join(
     awful.spawn("/home/jonas/.local/bin/my_scripts/nvim_fzf.sh "..terminal)   end,
               {description = "nvim_fzf", group = "launcher"}),
 
-    -- bind mod-d: spawn rofi
+    -- bind mod-d: spawn launcher.sh (dmenu, or rofi with LAUNCHER=rofi)
     awful.key({ modkey },            "d",     function ()
-    awful.spawn("rofi -show run -theme ~/.config/rofi/themes/gruvbox/gruvbox-dark.rasi")   end,
-              {description = "run rofi", group = "launcher"}),
+    awful.spawn("/home/jonas/.local/bin/my_scripts/launcher.sh")   end,
+              {description = "run launcher (dmenu/rofi)", group = "launcher"}),
 
     -- bind mod-c: spawn term_calc.sh
     awful.key({ modkey },            "c",     function ()
@@ -407,11 +407,6 @@ globalkeys = mytable.join(
     awful.key({ modkey, "Shift" },            "d",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh old " .. terminal)   end,
               {description = "code launcher (old)", group = "launcher"}),
-
-    -- bind mod-r: spawn dmenu_run
-    awful.key({ modkey },            "r",     function ()
-    awful.spawn("dmenu_run -i -l 20")    end,
-              {description = "run dmenu", group = "launcher"}),
 
     -- bind mod-w: spawn yazi ~/
     awful.key({ modkey },            "w",     function ()
