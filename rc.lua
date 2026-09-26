@@ -742,6 +742,12 @@ globalkeys = mytable.join(
     -- bind mod-ctrl-aring: layout floating
     awful.key({ modkey, ctrlkey }, "aring", function () awful.layout.set(awful.layout.suit.floating) end,
         {description = "layout: floating", group = "layout"}),
+    -- bind mod-shift-u: one more client in the master area
+    awful.key({ modkey, "Shift" }, "u", function () awful.tag.incnmaster( 1, nil, true) end,
+        {description = "increase the number of master clients", group = "layout"}),
+    -- bind mod-shift-i: one less client in the master area
+    awful.key({ modkey, "Shift" }, "i", function () awful.tag.incnmaster(-1, nil, true) end,
+        {description = "decrease the number of master clients", group = "layout"}),
 
     -- bind mod-shift-a: picom-trans -5 (decrease transparency)
     awful.key({ modkey, "Shift" }, "a", function() awful.spawn("picom-trans -c -5") end,
