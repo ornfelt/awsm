@@ -621,20 +621,25 @@ globalkeys = mytable.join(
     awful.key({ modkey, "Shift" }, "-", function () lain.util.useless_gaps_resize(-1) end,
         {description = "decrement useless gaps by 1", group = "tag"}),
 
-    -- bind mod-z: disable gaps (set to 0)
+    -- bind mod-z: toggle gaps (0 <-> previous gap, like dwm togglegaps)
     awful.key({ modkey }, "z", function ()
       local t = awful.screen.focused().selected_tag
       if t then
-        t.gap = 0
+        if t.gap == 0 then
+          t.gap = t.gap_before_off or beautiful.useless_gap
+        else
+          t.gap_before_off = t.gap
+          t.gap = 0
+        end
         awful.layout.arrange(t.screen)
       end
-    end, {description = "Disable gaps", group = "tag"}),
+    end, {description = "Toggle gaps", group = "tag"}),
 
-    -- bind mod-x: enable default gaps (set to 8)
+    -- bind mod-x: enable default gaps (theme useless_gap)
     awful.key({ modkey }, "x", function ()
       local t = awful.screen.focused().selected_tag
       if t then
-        t.gap = 8
+        t.gap = beautiful.useless_gap
         awful.layout.arrange(t.screen)
       end
     end, {description = "Enable default gaps", group = "tag"}),
