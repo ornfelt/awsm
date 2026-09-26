@@ -820,7 +820,7 @@ globalkeys = mytable.join(
         {description = "decrease master width factor", group = "layout"}),
 
     -- Layout keys like dwm (per tag). No awesome equivalent for dwm's deck
-    -- (mod-ctrl-u) and centeredfloatingmaster (mod-alt-p)
+    -- (mod-ctrl-u)
     -- bind mod-less: layout spiral
     awful.key({ modkey }, "less", function () awful.layout.set(awful.layout.suit.spiral) end,
         {description = "layout: spiral", group = "layout"}),
@@ -839,9 +839,6 @@ globalkeys = mytable.join(
     -- bind mod-ctrl-o: layout centerwork (dwm centeredmaster)
     awful.key({ modkey, ctrlkey }, "o", function () awful.layout.set(lain.layout.centerwork) end,
         {description = "layout: centered master", group = "layout"}),
-    -- bind mod-ctrl-aring: layout floating
-    awful.key({ modkey, ctrlkey }, "aring", function () awful.layout.set(awful.layout.suit.floating) end,
-        {description = "layout: floating", group = "layout"}),
     -- bind mod-r: layout menu (layout_menu.sh, like dwm)
     awful.key({ modkey }, "r", function () awful.util.layout_menu() end,
         {description = "layout menu", group = "layout"}),
