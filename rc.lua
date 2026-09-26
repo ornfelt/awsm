@@ -473,6 +473,11 @@ globalkeys = mytable.join(
     awful.spawn("/home/jonas/.local/bin/my_scripts/clip_history.sh greenclip")   end,
               {description = "clip_history", group = "launcher"}),
 
+    -- bind mod-shift-v: spawn qr_clip.sh
+    awful.key({ modkey, "Shift" },            "v",        function ()
+    awful.spawn("/home/jonas/.local/bin/my_scripts/qr_clip.sh")   end,
+              {description = "QR code of clipboard", group = "launcher"}),
+
     -- bind mod-period: spawn emojipick
     awful.key({modkey},            "period",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/emojipick/emojipick")   end,
