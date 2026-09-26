@@ -497,7 +497,7 @@ local netdownicon = wibox.widget {
 --local memicon = wibox.widget.imagebox(theme.widget_mem)
 local memicon = wibox.widget {
     widget = wibox.widget.textbox,
-    markup = markup.fontfg(theme.font, "#fabd2f", "  "),
+    markup = markup.fontfg(theme.font, "#fabd2f", "  "),
     align = "center",
     valign = "center"
 }
