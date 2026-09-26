@@ -68,6 +68,7 @@ theme.layout_txt_tiletop                        = "[tt]"
 theme.layout_txt_fairv                          = "[fv]"
 theme.layout_txt_fairh                          = "[fh]"
 theme.layout_txt_spiral                         = "[Φ]"
+--theme.layout_txt_spiral                       = "[@]" -- the old symbol
 theme.layout_txt_dwindle                        = "[d]"
 theme.layout_txt_centerwork                     = "|M|"
 theme.layout_txt_max                            = "[m]"
