@@ -129,17 +129,21 @@ local layout_applies_to_all_tags = true
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
+-- In dwm's layouts[] order (without deck and centeredfloatingmaster), then
+-- awesome's extra tile variants: scrolling on the layoutbox cycles them and
+-- the layout menu (mod-r) lists them in this order
 awful.layout.layouts = {
     awful.layout.suit.spiral,
-    awful.layout.suit.floating,
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
+    awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.max,
+    lain.layout.centerwork,
+    awful.layout.suit.floating,
+    awful.layout.suit.tile.left,
     awful.layout.suit.tile.top,
     --awful.layout.suit.fair,
     --awful.layout.suit.fair.horizontal,
-    --awful.layout.suit.spiral.dwindle,
-    --awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
     --awful.layout.suit.magnifier,
     --awful.layout.suit.corner.nw,
@@ -148,7 +152,6 @@ awful.layout.layouts = {
     --awful.layout.suit.corner.se,
     --lain.layout.cascade,
     --lain.layout.cascade.tile,
-    --lain.layout.centerwork,
     --lain.layout.centerwork.horizontal,
     --lain.layout.termfair,
     --lain.layout.termfair.center
@@ -163,6 +166,24 @@ lain.layout.cascade.tile.offset_y      = 32
 lain.layout.cascade.tile.extra_padding = 5
 lain.layout.cascade.tile.nmaster       = 5
 lain.layout.cascade.tile.ncol          = 2
+
+-- Pick a layout for the focused screen's tag from layout_menu.sh (rofi, with
+-- an ascii preview of each). Run by mod-r and a click on the layoutbox.
+awful.util.layout_menu = function()
+    local layouts = awful.layout.layouts
+    local cur = gears.table.hasitem(layouts, awful.layout.get()) or 1
+    local cmd = { "env", "LAYOUT_MENU_CURRENT=" .. (cur - 1),
+                  os.getenv("HOME") .. "/.local/bin/my_scripts/layout_menu.sh" }
+    for _, l in ipairs(layouts) do
+        table.insert(cmd, awful.layout.getname(l))
+    end
+    awful.spawn.easy_async(cmd, function(out)
+        local i = tonumber(out)
+        if i and layouts[i + 1] then
+            awful.layout.set(layouts[i + 1])
+        end
+    end)
+end
 
 -- Mirror a layout change on one tag to all other tags. Hooks the tag signal
 -- rather than the keybindings, so layoutbox clicks and awful.layout.inc are
@@ -770,6 +791,9 @@ globalkeys = mytable.join(
     -- bind mod-ctrl-aring: layout floating
     awful.key({ modkey, ctrlkey }, "aring", function () awful.layout.set(awful.layout.suit.floating) end,
         {description = "layout: floating", group = "layout"}),
+    -- bind mod-r: layout menu (layout_menu.sh, like dwm)
+    awful.key({ modkey }, "r", function () awful.util.layout_menu() end,
+        {description = "layout menu", group = "layout"}),
     -- bind mod-shift-u: one more client in the master area
     awful.key({ modkey, "Shift" }, "u", function () awful.tag.incnmaster( 1, nil, true) end,
         {description = "increase the number of master clients", group = "layout"}),
