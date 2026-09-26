@@ -304,6 +304,17 @@ local function pactl(args)
     awful.spawn.easy_async("pactl " .. args, function () beautiful.volume.update() end)
 end
 
+-- Focus the first (top) or last (bottom) visible client in the stack, in the
+-- same order mod-j/k walk (dwm focusstack 0 / -1)
+local function focus_stack_end(last)
+    local cls = awful.client.visible(awful.screen.focused())
+    local c = cls[last and #cls or 1]
+    if c then
+        client.focus = c
+        c:raise()
+    end
+end
+
 globalkeys = mytable.join(
     -- {{{ Personal keybindings
 
@@ -562,6 +573,12 @@ globalkeys = mytable.join(
     -- bind mod-k: awful.client.focus.byidx -1 (focus previous)
     awful.key({ modkey,         }, "k", function () awful.client.focus.byidx(-1) end,
         {description = "Focus previous by index", group = "client"}),
+    -- bind mod-ctrl-j: focus bottom of stack
+    awful.key({ modkey, ctrlkey }, "j", function () focus_stack_end(true) end,
+        {description = "Focus bottom of stack", group = "client"}),
+    -- bind mod-ctrl-k: focus top of stack
+    awful.key({ modkey, ctrlkey }, "k", function () focus_stack_end(false) end,
+        {description = "Focus top of stack", group = "client"}),
 
     -- By direction client focus
     --awful.key({ altkey, "Shift" }, "j", function() awful.client.focus.global_bydirection("down")
@@ -600,6 +617,14 @@ globalkeys = mytable.join(
     -- bind mod-shift-k: awful.client.swap.byidx -1 (swap previous)
     awful.key({ modkey, "Shift" }, "k", function () awful.client.swap.byidx( -1) end,
         {description = "swap with previous client by index", group = "client"}),
+    -- bind mod-shift-ctrl-j: move client to bottom of stack
+    awful.key({ modkey, "Shift", ctrlkey }, "j", function ()
+            if client.focus then awful.client.setslave(client.focus) end
+        end, {description = "move client to bottom of stack", group = "client"}),
+    -- bind mod-shift-ctrl-k: move client to top of stack
+    awful.key({ modkey, "Shift", ctrlkey }, "k", function ()
+            if client.focus then awful.client.setmaster(client.focus) end
+        end, {description = "move client to top of stack", group = "client"}),
     -- bind mod-l: awful.screen.focus_relative +1 (focus next screen)
     awful.key({ modkey          }, "l", function () awful.screen.focus_relative(1) end,
         {description = "focus the next screen", group = "screen"}),
