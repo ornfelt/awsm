@@ -606,13 +606,20 @@ globalkeys = mytable.join(
     --     if client.focus then client.focus:raise() end end,
     --     {description = "go back", group = "client"}),
 
-    -- On the fly useless gaps change
-    -- bind mod-+: lain.util.useless_gaps_resize +1 (increment gaps)
-    awful.key({ modkey }, "+", function () lain.util.useless_gaps_resize(1) end,
+    -- On the fly useless gaps change. The gap is applied on both sides of
+    -- each window, so ±2 here is close to dwm's ±3 between windows
+    -- bind mod-+: lain.util.useless_gaps_resize +2 (increment gaps)
+    awful.key({ modkey }, "+", function () lain.util.useless_gaps_resize(2) end,
         {description = "increment useless gaps", group = "tag"}),
-    -- bind mod--: lain.util.useless_gaps_resize -1 (decrement gaps)
-    awful.key({ modkey }, "-", function () lain.util.useless_gaps_resize(-1) end,
+    -- bind mod--: lain.util.useless_gaps_resize -2 (decrement gaps)
+    awful.key({ modkey }, "-", function () lain.util.useless_gaps_resize(-2) end,
         {description = "decrement useless gaps", group = "tag"}),
+    -- bind mod-shift-+: lain.util.useless_gaps_resize +1 (increment gaps by 1)
+    awful.key({ modkey, "Shift" }, "+", function () lain.util.useless_gaps_resize(1) end,
+        {description = "increment useless gaps by 1", group = "tag"}),
+    -- bind mod-shift--: lain.util.useless_gaps_resize -1 (decrement gaps by 1)
+    awful.key({ modkey, "Shift" }, "-", function () lain.util.useless_gaps_resize(-1) end,
+        {description = "decrement useless gaps by 1", group = "tag"}),
 
     -- bind mod-z: disable gaps (set to 0)
     awful.key({ modkey }, "z", function ()
