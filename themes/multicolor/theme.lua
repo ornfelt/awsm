@@ -561,7 +561,7 @@ local function update_netstatus()
     awful.spawn.easy_async({ statusbar_dir .. "sb-network", "--awesome" }, function(out)
         local color, icon = out:match("^(#%x+) (.-)%s*$")
         if not color then color, icon = "#928374", "\u{f05aa}" end
-        netstatus:set_markup(markup.fontfg(theme.font, color, icon .. "  "))
+        netstatus:set_markup(markup.fontfg(theme.font, color, icon .. " "))
     end)
 end
 gears.timer({ timeout = 3, autostart = true, call_now = true, callback = update_netstatus })
