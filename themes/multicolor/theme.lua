@@ -67,7 +67,7 @@ theme.layout_txt_tilebottom                     = "[b]"
 theme.layout_txt_tiletop                        = "[tt]"
 theme.layout_txt_fairv                          = "[fv]"
 theme.layout_txt_fairh                          = "[fh]"
-theme.layout_txt_spiral                         = " [@]"
+theme.layout_txt_spiral                         = "[@]"
 theme.layout_txt_dwindle                        = "[d]"
 theme.layout_txt_centerwork                     = "|M|"
 theme.layout_txt_max                            = "[m]"
@@ -670,9 +670,10 @@ claude_usage = require("claude_usage").new({
 local claude_usage_with_margin = wibox.container.margin(claude_usage, 0, 6, 0, 0)
 
 local function update_txt_layoutbox(s)
-    -- Writes a string representation of the current layout in a textbox widget
+    -- Writes a string representation of the current layout in a textbox widget,
+    -- with one space before it, between it and the tag numbers
     local txt_l = theme["layout_txt_" .. awful.layout.getname(awful.layout.get(s))] or ""
-    s.mytxtlayoutbox:set_text(txt_l)
+    s.mytxtlayoutbox:set_text(" " .. txt_l)
 end
 
 
@@ -787,7 +788,8 @@ function theme.at_screen_connect(s)
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
 
     -- We need one layoutbox per screen.
-    s.mytxtlayoutbox = wibox.widget.textbox(theme["layout_txt_" .. awful.layout.getname(awful.layout.get(s))])
+    s.mytxtlayoutbox = wibox.widget.textbox()
+    update_txt_layoutbox(s)
     awful.tag.attached_connect_signal(s, "property::selected", function () update_txt_layoutbox(s) end)
     awful.tag.attached_connect_signal(s, "property::layout", function () update_txt_layoutbox(s) end)
     s.mytxtlayoutbox:buttons(my_table.join(
