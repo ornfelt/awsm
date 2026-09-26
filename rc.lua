@@ -204,13 +204,29 @@ local function sync_layout(t)
 end
 tag.connect_signal("property::layout", sync_layout)
 
+-- A notification that replaces the last one with the same tag instead of
+-- stacking (like the x-dunst-stack-tag hint dwm sends)
+local wm_notifications = {}
+local function wm_notify(tag, text)
+    local last = wm_notifications[tag]
+    wm_notifications[tag] = naughty.notify { text = text, timeout = 2, replaces_id = last and last.id }
+end
+
 -- Switch between one layout for all tags and a layout per tag; switching
 -- back to all tags gives every tag the current one (like dwm's mod-shift-r)
 local function toggle_layout_all_tags()
     layout_applies_to_all_tags = not layout_applies_to_all_tags
     local t = awful.screen.focused().selected_tag
     if t then sync_layout(t) end
-    naughty.notify { text = layout_applies_to_all_tags and "layout: all tags" or "layout: per tag", timeout = 2 }
+    wm_notify("layout", layout_applies_to_all_tags and "layout: all tags" or "layout: per tag")
+end
+
+-- One more / one less client in the master area, and say how many (like dwm);
+-- sensible: awful keeps the count within the number of tiled clients
+local function inc_nmaster(add)
+    awful.tag.incnmaster(add, nil, true)
+    local t = awful.screen.focused().selected_tag
+    if t then wm_notify("nmaster", "master: " .. t.master_count) end
 end
 
 -- https://awesomewm.org/doc/api/classes/client.html
@@ -808,10 +824,10 @@ globalkeys = mytable.join(
     awful.key({ modkey, "Shift" }, "r", toggle_layout_all_tags,
         {description = "toggle layout for all tags / per tag", group = "layout"}),
     -- bind mod-shift-u: one more client in the master area
-    awful.key({ modkey, "Shift" }, "u", function () awful.tag.incnmaster( 1, nil, true) end,
+    awful.key({ modkey, "Shift" }, "u", function () inc_nmaster( 1) end,
         {description = "increase the number of master clients", group = "layout"}),
     -- bind mod-shift-i: one less client in the master area
-    awful.key({ modkey, "Shift" }, "i", function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Shift" }, "i", function () inc_nmaster(-1) end,
         {description = "decrease the number of master clients", group = "layout"}),
 
     -- bind mod-shift-a: picom-trans -5 (decrease transparency)
@@ -991,7 +1007,10 @@ clientkeys = mytable.join(
         end, {description = "zoom (move to master)", group = "client"}),
 
     -- bind mod-shift-less: toggle sticky (show on all tags)
-    awful.key({ modkey, "Shift" }, "less", function (c) c.sticky = not c.sticky end,
+    awful.key({ modkey, "Shift" }, "less", function (c)
+        c.sticky = not c.sticky
+        wm_notify("sticky", c.sticky and "sticky: on" or "sticky: off")
+    end,
         {description = "toggle sticky", group = "client"}),
 
     -- awful.key({ modkey, ctrlkey }, "Return", function (c) c:swap(awful.client.getmaster()) end,
