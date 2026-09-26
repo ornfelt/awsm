@@ -812,6 +812,19 @@ clientkeys = mytable.join(
       {description = "toggle floating and center", group = "client"}
     ),
 
+    -- bind mod-shift-space: zoom (move to master; on master, promote the next one)
+    awful.key({ modkey, "Shift" }, "space",
+        function (c)
+            if c.floating then return end
+            local tiled = awful.client.tiled(c.screen)
+            local target = c
+            if tiled[1] == c then target = tiled[2] end
+            if not target then return end
+            awful.client.setmaster(target)
+            client.focus = target
+            target:raise()
+        end, {description = "zoom (move to master)", group = "client"}),
+
     -- awful.key({ modkey, ctrlkey }, "Return", function (c) c:swap(awful.client.getmaster()) end,
     --   {description = "move to master", group = "client"}),
     -- awful.key({ modkey, "Shift" }, "t", function (c) c.ontop = not c.ontop end,
