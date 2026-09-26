@@ -249,6 +249,9 @@ screen.connect_signal("property::geometry", function(s)
     end
 end)
 
+-- Maximize a lone firefox (like dwm's browser gaps); mod-ctrl-z toggles it
+local firefox_auto_max = true
+
 -- No borders when rearranging only 1 non-floating or maximized client
 screen.connect_signal("arrange", function (s)
     local only_one = #s.tiled_clients == 1
@@ -265,7 +268,7 @@ screen.connect_signal("arrange", function (s)
   local clients = s.clients
   for _, c in ipairs(clients) do
     if c.class == "firefox" or c.class == "firefox-esr" then
-      if #clients == 1 then
+      if #clients == 1 and firefox_auto_max then
         if not c.maximized then
           c.auto_maximized = true
           c.maximized = true
@@ -672,6 +675,12 @@ globalkeys = mytable.join(
     -- bind mod-shift--: lain.util.useless_gaps_resize -1 (decrement gaps by 1)
     awful.key({ modkey, "Shift" }, "-", function () lain.util.useless_gaps_resize(-1) end,
         {description = "decrement useless gaps by 1", group = "tag"}),
+
+    -- bind mod-ctrl-z: toggle maximizing a lone firefox (dwm togglebgaps)
+    awful.key({ modkey, ctrlkey }, "z", function ()
+      firefox_auto_max = not firefox_auto_max
+      for s in screen do awful.layout.arrange(s) end
+    end, {description = "Toggle maximizing a lone firefox", group = "tag"}),
 
     -- bind mod-z: toggle gaps (0 <-> previous gap, like dwm togglegaps)
     awful.key({ modkey }, "z", function ()
