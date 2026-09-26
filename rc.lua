@@ -229,6 +229,25 @@ local function inc_nmaster(add)
     if t then wm_notify("nmaster", "master: " .. t.master_count) end
 end
 
+-- Vertical resize, like dwm's setcfact: the focused window's share of the
+-- height of its column (of the width of its row in tile.bottom/top). Only the
+-- tile layouts keep these shares; awful.client.incwfact errors on a column
+-- they haven't filled in, so the other layouts do nothing
+local function wfact_layout(c)
+    local name = awful.layout.getname(awful.layout.get(c.screen))
+    return name == "tile" or name == "tileleft" or name == "tilebottom" or name == "tiletop"
+end
+local function inc_wfact(add)
+    local c = client.focus
+    if c and not c.floating and wfact_layout(c) then awful.client.incwfact(add, c) end
+end
+-- An even share of the column again
+local function reset_wfact()
+    local c = client.focus
+    local w = c and not c.floating and wfact_layout(c) and awful.client.idx(c)
+    if w then awful.client.setwfact(1 / w.num, c) end
+end
+
 -- https://awesomewm.org/doc/api/classes/client.html
 awful.util.taglist_buttons = mytable.join(
     awful.button({ }, 1, function(t) t:view_only() end),
@@ -818,6 +837,15 @@ globalkeys = mytable.join(
     -- bind mod-y: awful.tag.incmwfact -0.05 (decrease master width)
     awful.key({ modkey }, "y", function () awful.tag.incmwfact(-0.05) end,
         {description = "decrease master width factor", group = "layout"}),
+    -- bind mod-alt-y: awful.client.incwfact -0.1 (focused window shorter)
+    awful.key({ modkey, altkey }, "y", function () inc_wfact(-0.1) end,
+        {description = "focused window shorter (tile layouts)", group = "layout"}),
+    -- bind mod-alt-o: awful.client.incwfact +0.1 (focused window taller)
+    awful.key({ modkey, altkey }, "o", function () inc_wfact(0.1) end,
+        {description = "focused window taller (tile layouts)", group = "layout"}),
+    -- bind mod-alt-x: focused window back to an even share of its column
+    awful.key({ modkey, altkey }, "x", reset_wfact,
+        {description = "focused window back to its default size", group = "layout"}),
 
     -- Layout keys like dwm (per tag). No awesome equivalent for dwm's deck
     -- (mod-ctrl-u)
