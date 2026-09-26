@@ -260,22 +260,19 @@ screen.connect_signal("arrange", function (s)
         end
     end
 
-  -- Maximize firefox when it's the only client
-  for s in screen do
-    local clients = s.clients
-    local firefox_clients = {}
-
-    for _, c in ipairs(clients) do
-      if c.class == "firefox" or c.class == "firefox-esr" then
-        table.insert(firefox_clients, c)
-      end
-    end
-
-    if #clients == 1 and #firefox_clients == 1 then
-      firefox_clients[1].maximized = true
-    else
-      for _, fc in ipairs(firefox_clients) do
-        fc.maximized = false
+  -- Maximize firefox when it's the only client. Only un-maximize the ones
+  -- maximized here, so a manual maximize (mod-shift-ctrl-m) is kept
+  local clients = s.clients
+  for _, c in ipairs(clients) do
+    if c.class == "firefox" or c.class == "firefox-esr" then
+      if #clients == 1 then
+        if not c.maximized then
+          c.auto_maximized = true
+          c.maximized = true
+        end
+      elseif c.auto_maximized then
+        c.auto_maximized = false
+        c.maximized = false
       end
     end
   end
