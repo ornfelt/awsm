@@ -365,7 +365,7 @@ globalkeys = mytable.join(
     -- bind mod-shift-c: spawn code_helper.sh new
     awful.key({ modkey, "Shift" },            "c",     function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh new "..terminal)   end,
-              {description = "code launcher", group = "launcher"}),
+              {description = "code launcher (new)", group = "launcher"}),
 
     --awful.key({ modkey, "Control" },            "c",     function ()
     --awful.util.spawn("GTK_THEME=Adwaita:dark gnome-calendar")   end,
@@ -378,7 +378,7 @@ globalkeys = mytable.join(
     -- bind mod-shift-d: spawn code_helper.sh old
     awful.key({ modkey, "Shift" },            "d",     function ()
     awful.util.spawn("/home/jonas/.local/bin/my_scripts/code_helper.sh old " .. terminal)   end,
-              {description = "code launcher", group = "launcher"}),
+              {description = "code launcher (old)", group = "launcher"}),
 
     -- bind mod-r: spawn dmenu_run
     awful.key({ modkey },            "r",     function ()
@@ -428,7 +428,7 @@ globalkeys = mytable.join(
     -- bind mod-shift-period: spawn suspend_awsm_lock.sh
     awful.key({ modkey, "Shift"    },            "period",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/suspend_awsm_lock.sh")    end,
-              {description = "Suspend", group = "launcher"}),
+              {description = "Lock, mute and suspend", group = "launcher"}),
 
     -- bind mod-v: spawn clip_history.sh greenclip
     awful.key({modkey},            "v",        function ()
@@ -513,17 +513,17 @@ globalkeys = mytable.join(
     -- bind Print: spawn screenshot_select.sh
     awful.key({ },  "Print",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/screenshot_select.sh")   end,
-              {description = "Screenshot", group = "launcher"}),
+              {description = "Screenshot selection", group = "launcher"}),
 
     -- bind shift-Print: spawn screenshot.sh
     awful.key({ "Shift"  },  "Print",     function ()
     awful.spawn("sh /home/jonas/.local/bin/my_scripts/screenshot.sh")  end,
-              {description = "Screenshot", group = "launcher"}),
+              {description = "Screenshot full screen", group = "launcher"}),
 
     -- bind ctrl-Print: spawn screenshot_ocr.sh
     awful.key({ "Control" },  "Print",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/screenshot_ocr.sh")  end,
-              {description = "Screenshot", group = "launcher"}),
+              {description = "Screenshot OCR", group = "launcher"}),
 
     -- bind mod-left: awful.tag.viewprev
     awful.key({ modkey,         }, "Left",   awful.tag.viewprev,
@@ -720,20 +720,23 @@ globalkeys = mytable.join(
         function ()
             os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
-        end),
+        end,
+        {description = "Volume +1%", group = "hotkeys"}),
     --awful.key({ ctrlkey }, "Down",
     -- bind XF86AudioLowerVolume: amixer volume -1%
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
-        end),
+        end,
+        {description = "Volume -1%", group = "hotkeys"}),
     -- bind XF86AudioMute: amixer toggle mute
     awful.key({ }, "XF86AudioMute",
         function ()
             os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
-        end)
+        end,
+        {description = "Toggle mute", group = "hotkeys"})
 
     -- Copy primary to clipboard (terminals to gtk)
     -- awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
@@ -1060,7 +1063,7 @@ for i = 1, 9 do
         --end
         switch_to_tag_stay(i)
       end,
-      {description = "move focused client to tag #"..i, group = "tag"}),
+      {description = "move focused client to tag #"..i.." (stay)", group = "tag"}),
 
     -- Toggle tag on focused client.
     -- bind mod-ctrl-shift-[1-9]: toggle client on tag
