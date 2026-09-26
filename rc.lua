@@ -360,6 +360,16 @@ globalkeys = mytable.join(
     awful.key({ modkey, ctrlkey }, "p", function() toggle_widget_visibility() end,
               { description = "toggle widgets visibility", group = "custom" }),
 
+    -- bind mod-ctrl-shift-p: toggle wibox on the focused screen only
+    awful.key({ modkey, ctrlkey, "Shift" }, "p", function ()
+            local s = awful.screen.focused()
+            s.mywibox.visible = not s.mywibox.visible
+            if s.mybottomwibox then
+                s.mybottomwibox.visible = not s.mybottomwibox.visible
+            end
+        end,
+        {description = "Show/hide wibox (bar) on this screen", group = "awesome"}),
+
     -- bind mod-a: spawn tmux_attach.sh
     awful.key({ modkey },            "a",     function ()
     awful.spawn("/home/jonas/.local/bin/my_scripts/tmux_attach.sh "..terminal)  end,
