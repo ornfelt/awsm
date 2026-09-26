@@ -124,7 +124,8 @@ local filex       = "yazi"
 local quit_uses_sysmenu = true
 
 -- true: switching layout applies it to every tag (on all screens), false:
--- only the current tag changes (awesome's default per-tag layouts)
+-- only the current tag changes (awesome's default per-tag layouts).
+-- mod-shift-r toggles it at runtime
 local layout_applies_to_all_tags = true
 
 awful.util.terminal = terminal
@@ -185,22 +186,31 @@ awful.util.layout_menu = function()
     end)
 end
 
--- Mirror a layout change on one tag to all other tags. Hooks the tag signal
--- rather than the keybindings, so layoutbox clicks and awful.layout.inc are
--- covered too. The guard stops the other tags' own property::layout signals
--- from propagating again.
-if layout_applies_to_all_tags then
-    local syncing_layout = false
-    tag.connect_signal("property::layout", function(t)
-        if syncing_layout then return end
-        syncing_layout = true
-        for _, other in ipairs(root.tags()) do
-            if other ~= t and other.layout ~= t.layout then
-                other.layout = t.layout
-            end
+-- Mirror a layout change on one tag to all other tags while
+-- layout_applies_to_all_tags is on. Hooks the tag signal rather than the
+-- keybindings, so layoutbox clicks and awful.layout.inc are covered too. The
+-- guard stops the other tags' own property::layout signals from propagating
+-- again.
+local syncing_layout = false
+local function sync_layout(t)
+    if syncing_layout or not layout_applies_to_all_tags then return end
+    syncing_layout = true
+    for _, other in ipairs(root.tags()) do
+        if other ~= t and other.layout ~= t.layout then
+            other.layout = t.layout
         end
-        syncing_layout = false
-    end)
+    end
+    syncing_layout = false
+end
+tag.connect_signal("property::layout", sync_layout)
+
+-- Switch between one layout for all tags and a layout per tag; switching
+-- back to all tags gives every tag the current one (like dwm's mod-shift-r)
+local function toggle_layout_all_tags()
+    layout_applies_to_all_tags = not layout_applies_to_all_tags
+    local t = awful.screen.focused().selected_tag
+    if t then sync_layout(t) end
+    naughty.notify { text = layout_applies_to_all_tags and "layout: all tags" or "layout: per tag", timeout = 2 }
 end
 
 -- https://awesomewm.org/doc/api/classes/client.html
@@ -794,6 +804,9 @@ globalkeys = mytable.join(
     -- bind mod-r: layout menu (layout_menu.sh, like dwm)
     awful.key({ modkey }, "r", function () awful.util.layout_menu() end,
         {description = "layout menu", group = "layout"}),
+    -- bind mod-shift-r: toggle layouts for all tags / per tag
+    awful.key({ modkey, "Shift" }, "r", toggle_layout_all_tags,
+        {description = "toggle layout for all tags / per tag", group = "layout"}),
     -- bind mod-shift-u: one more client in the master area
     awful.key({ modkey, "Shift" }, "u", function () awful.tag.incnmaster( 1, nil, true) end,
         {description = "increase the number of master clients", group = "layout"}),
