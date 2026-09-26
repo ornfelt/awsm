@@ -919,6 +919,10 @@ clientkeys = mytable.join(
             target:raise()
         end, {description = "zoom (move to master)", group = "client"}),
 
+    -- bind mod-shift-less: toggle sticky (show on all tags)
+    awful.key({ modkey, "Shift" }, "less", function (c) c.sticky = not c.sticky end,
+        {description = "toggle sticky", group = "client"}),
+
     -- awful.key({ modkey, ctrlkey }, "Return", function (c) c:swap(awful.client.getmaster()) end,
     --   {description = "move to master", group = "client"}),
     -- awful.key({ modkey, "Shift" }, "t", function (c) c.ontop = not c.ontop end,
