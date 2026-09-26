@@ -719,6 +719,30 @@ globalkeys = mytable.join(
     awful.key({ modkey }, "y", function () awful.tag.incmwfact(-0.05) end,
         {description = "decrease master width factor", group = "layout"}),
 
+    -- Layout keys like dwm (per tag). No awesome equivalent for dwm's deck
+    -- (mod-ctrl-u) and centeredfloatingmaster (mod-alt-p)
+    -- bind mod-less: layout spiral
+    awful.key({ modkey }, "less", function () awful.layout.set(awful.layout.suit.spiral) end,
+        {description = "layout: spiral", group = "layout"}),
+    -- bind mod-s: layout tile.bottom (dwm bstack)
+    awful.key({ modkey }, "s", function () awful.layout.set(awful.layout.suit.tile.bottom) end,
+        {description = "layout: bottom stack", group = "layout"}),
+    -- bind mod-ctrl-t: layout tile
+    awful.key({ modkey, ctrlkey }, "t", function () awful.layout.set(awful.layout.suit.tile) end,
+        {description = "layout: tile", group = "layout"}),
+    -- bind mod-ctrl-y: layout dwindle
+    awful.key({ modkey, ctrlkey }, "y", function () awful.layout.set(awful.layout.suit.spiral.dwindle) end,
+        {description = "layout: dwindle", group = "layout"}),
+    -- bind mod-ctrl-i: layout max (dwm monocle)
+    awful.key({ modkey, ctrlkey }, "i", function () awful.layout.set(awful.layout.suit.max) end,
+        {description = "layout: monocle (max)", group = "layout"}),
+    -- bind mod-ctrl-o: layout centerwork (dwm centeredmaster)
+    awful.key({ modkey, ctrlkey }, "o", function () awful.layout.set(lain.layout.centerwork) end,
+        {description = "layout: centered master", group = "layout"}),
+    -- bind mod-ctrl-aring: layout floating
+    awful.key({ modkey, ctrlkey }, "aring", function () awful.layout.set(awful.layout.suit.floating) end,
+        {description = "layout: floating", group = "layout"}),
+
     -- bind mod-shift-a: picom-trans -5 (decrease transparency)
     awful.key({ modkey, "Shift" }, "a", function() awful.spawn("picom-trans -c -5") end,
         {description = "decrease transparency", group = "custom"}),
